@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <style>
+  
+    </style>
+</head>
+
+
+<body>
+
+<!--  <nav class="navbar navbar-default navbar-inverse" role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display 
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Login dropdown</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling 
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Link</a></li>
+        <li><a href="#">Link</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+            <li class="divider"></li>
+            <li><a href="#">One more separated link</a></li>
+          </ul>
+        </li>
+      </ul>
+      <form class="navbar-form navbar-left" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+      <ul class="nav navbar-nav navbar-right">
+        <li><p class="navbar-text">Already have an account?</p></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b>Login</b> <span class="caret"></span></a>
+			<ul id="login-dp" class="dropdown-menu">
+				<li>
+					 <div class="row">
+							<div class="col-md-12">
+								
+								 <form th:action="@{/login}" method="post">
+    
+    <div th:if="${param.error}">
+      <div class="alert alert-danger">Invalid username or
+       password.</div>
+     </div>
+     
+     <div th:if="${param.logout}">
+      <div class="alert alert-info">You have been logged out.</div>
+     </div>
+    
+    
+    
+    <div class="form-group">
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" class="form-control"
+       autofocus="autofocus" placeholder="Username" />
+     </div>
+     
+     <div class="form-group">
+      <label for="password">Password</label> 
+      <input type="password" id="password" name="password" class="form-control"
+       placeholder="Password" />
+     </div>
+     
+      <div class="form-group">
+      <div class="row">
+       <div class="col-sm-6 col-sm-offset-3">
+        <input type="submit" name="login-submit" id="login-submit"
+         class="form-control btn btn-primary" value="Log In" />
+       </div>
+      </div>
+     </div>
+     
+     </form>
+							</div>
+							<div class="form-group">
+      <span>New user? <a href="/" th:href="@{/signUpForm}">Register
+        here</a></span>
+     </div>
+					 </div>
+				</li>
+			</ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse 
+  </div><!-- /.container-fluid 
+</nav>
+-->
+
+
+	
+	
+	<nav class="navbar navbar-expand-lg navbar-light bg-warning">
+        <a class="navbar-brand" href="#">DZIKLE'S SHOP</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto topnav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Shop Pre-Owned</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Shop New Cars</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Clearence Event</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Resources
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Carfax</a>
+                        <a class="dropdown-item" href="#">Carproof</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Omnivic</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/forgotPassword}">Did you forget your password??? CLICK MEEE :-)</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-primary text-white" type="button" href="#" data-toggle="modal" data-target="#myModal">Sign In/Register</a>                  
+                </li>
+                
+            </ul>
+        </div>
+
+            <!-- The Modal -->
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Customer Sign In</h4>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                   <form th:action="@{/login}" method="post">
+    
+    <div th:if="${param.error}">
+      <div class="alert alert-danger">Invalid username or
+       password.</div>
+     </div>
+     
+     <div th:if="${param.logout}">
+      <div class="alert alert-info">You have been logged out.</div>
+     </div>
+    
+    
+    
+    <div class="form-group">
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" class="form-control"
+       autofocus="autofocus" placeholder="Username" />
+     </div>
+     
+     <div class="form-group">
+      <label for="password">Password</label> 
+      <input type="password" id="password" name="password" class="form-control"
+       placeholder="Password" />
+     </div>
+     
+      <div class="form-group">
+      <div class="row">
+       <div class="col-sm-6 col-sm-offset-3">
+        <input type="submit" name="login-submit" id="login-submit"
+         class="form-control btn btn-primary" value="Log In" />
+       </div>
+      </div>
+     </div>
+     
+     </form>
+                </div>
+                <div class="form-group">
+      <span>New user? <a href="/" th:href="@{/signUpForm}">Register
+        here</a></span>
+     </div>
+     
+     <div class="form-group">
+     <p> 
+     <a th:href="@{/forgotPassword}">Did you forget your password??? CLICK MEEE :-)</a>
+     </p>
+     
+     </div>
+     
+     
+
+                
+            </div>
+        </div>
+    </div>
+            
+
+    </nav>
+
+
+<div class="container">
+<h2>All Products</h2>
+
+
+
+  <br>
+   <a th:href="@{/search}" class="btn btn-outline-primary">Too messy? yeah i know ... Go to our search cretiria page...</a>
+
+ <br> <br>
+    
+    
+
+ <div class="row">
+  <div class="col-xl-3" th:each="product : ${products}">
+   <div class="card" style="width: 15rem;">
+    <img th:src="*{'data:image/png;base64,'+{product.image}}" style="width:238px" >
+     <div class="card-body">
+      <p class="card-title" th:text = "${product.productName}"></p>
+      <hr>
+      <p class="card-text" th:text = "${product.productPrice}"></p>
+
+      <a th:href="@{/products/productDetails/{id}(id=${product.id})}" class="btn btn-primary">See details</a>
+      
+
+    </div>
+   </div>
+  </div>
+ </div>
+
+<br>
+
+
+</div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
+  </script>
+</body>
+
+</html>
