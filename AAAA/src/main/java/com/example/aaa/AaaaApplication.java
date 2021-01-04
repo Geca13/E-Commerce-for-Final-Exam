@@ -67,7 +67,7 @@ public class AaaaApplication {
 			try {
 				roleRepository.save(new Role(1, RoleName.ROLE_ADMIN));
 				roleRepository.save(new Role(2, RoleName.ROLE_USER));
-				roleRepository.save(new Role(3, RoleName.ROLE_SELLER));
+				
 		
 				cbRepository.save(new CardBrend(1,"VISA"));
 				cbRepository.save(new CardBrend(2,"MasterCard"));
@@ -79,10 +79,7 @@ public class AaaaApplication {
 				bankRepository.save(new Bank(2,"Stopanska Banka"));
 				bankRepository.save(new Bank(3,"Komercijalna Banka"));
 				
-				storeRepository.save(new Store(1,"Vero","geca1234567890@yahoo.com",bankRepository.findById(1).get(),"1234567890", 0.00));
-				storeRepository.save(new Store(2,"Ramstore","karafiloski84@gmail.com",bankRepository.findById(2).get(),"2345678901", 0.00));
-				storeRepository.save(new Store(3,"KAM","rashelagk@yahoo.com",bankRepository.findById(3).get(),"3456789012", 0.00));
-				storeRepository.save(new Store(4,"TINEX","geca1234567890@yahoo.com",bankRepository.findById(1).get(),"4567890123", 0.00));
+				
 				
 				countryRepository.save(new Country(1, "Macedonia"));
 				countryRepository.save(new Country(2, "Norway"));
@@ -102,6 +99,7 @@ public class AaaaApplication {
 				ccRepository.save(new CreditCard(2,"Stole Lazarov",cbRepository.findById(2).get(),"2345678901234567", "February","2022","234",200000.00,"karafiloski84@gmail.com"));
 				ccRepository.save(new CreditCard(3,"Dimitar Josifov",cbRepository.findById(3).get(),"3456789012345678", "March","2023","345",300000.00,"karafiloski84@gmail.com"));
 				
+				categoryRepository.save(new Category(0,"Default"));
 				categoryRepository.save(new Category(1,"Dairy"));
 				categoryRepository.save(new Category(2,"Candy"));
 				categoryRepository.save(new Category(3,"Snacks"));
