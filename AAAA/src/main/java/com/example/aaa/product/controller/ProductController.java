@@ -325,76 +325,7 @@ public class ProductController {
 		
 		}
 		
-		@GetMapping("/products/find")
-		public String processFindProducts(Model model,@ModelAttribute("product") Product product) {
-			
-		List<Product> products = productRepository.findByKeyword(product.getKeyword());
-			
-			if (product.getKeyword().equals("")) {
-				List<Product> products2 = productRepository.findAll();
-				model.addAttribute("products", products2);
-				return "productGrid";
-				
-			} else if (products.size() == 1) {
-			return "redirect:/products/productDetails/" + products.get(0).getId();
-			
-			 } else if(products.isEmpty()) {
-				return "noProducts";
-			}
-			
-			model.addAttribute("products", products);
-			return "productGrid";
-		}
-	/*	
-		@GetMapping("products/findByOrigin")
-		public String processFindProductsByOrigin(Model model, Product product,@Param("word") String word) {
-			List<Product> products = productRepository.byOrigin(product.getCountry().getCountryName());
-			if (product.getCountry().getCountryName().equals("")) {
-				List<Product> products2 = productRepository.findAll();
-				model.addAttribute("products", products2);
-				return "productGrid";
-				
-				} else if (products.size() == 1) {
-			return "redirect:/products/productDetails/" + products.get(0).getId();
-			
-				} else if(products.isEmpty()) {
-				return "noProducts";
-			}
-			
-			model.addAttribute("products", products);
-			return "productGrid";
-		}
-		*/
-		
-		@GetMapping("/products/findByCategory/category")
-		public String processFindProductsByCategory(Model model,Product product,@AuthenticationPrincipal UsersDetails userD, Pageable pageable) {
-		//	gridDetails(model, userD, 1);
-		      Page<Product> products2 = productRepository.findByCategory(product.getCategory(),pageable);
-			
-	             if(products2.isEmpty()) {
-			
-                  	return "redirect:/products?nothingReturnedC";
-	             }
-			
-		       model.addAttribute("products", products2);
-			return "productGrid";
-		}
-		
-		@GetMapping("/products/findByBrand/brand")
-		public String processFindProductsByManufacturer(Model model,Product product) {
-              
-			
-		    List<Product> products2 = productRepository.findByManufacturer(product.getManufacturer());
-		    if(products2.isEmpty()) {
-			
-					return "redirect:/products?nothingReturnedM";
-				}
-	      	
-		
-		            model.addAttribute("products", products2);
-			     return "productGrid";
-		}	
-		
+	
 		
 		
 		
