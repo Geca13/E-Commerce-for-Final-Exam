@@ -114,31 +114,12 @@ public class ProductController {
         model.addAttribute("user", user);
         
         List<Product> last10= productRepository.findAll();
-    //    List<Product> last10 = all.subList(all.size()-8,all.size());
+     //   List<Product> last10 = all.subList(all.size()-8,all.size());
         model.addAttribute("last10", last10);
         
-        List<Product> products = productRepository.findByKeyword(product.getKeyword());
-        model.addAttribute("products", products);
-        
-        List<Category>findByWord = categoryRepository.findAll();
-        Page<Product> category = productRepository.findByCategory(product.getCategory(),pageable );
-        model.addAttribute("byCategory", findByWord);
-        model.addAttribute("category", category);
-        
-		
-	//	List<Product> byOrigin = productRepository.byOrigin(product.getCountry().getCountryName());
-	//	model.addAttribute("byOrigin", byOrigin);
-		
-		List<Product> manufacturer = productRepository.findByManufacturer(product.getManufacturer());
-		model.addAttribute("manufacturer", manufacturer);
-		List<Manufacturer>byManufacturer = manufacturerRepository.findAll();
-		model.addAttribute("byManufacturer", byManufacturer);
-		
-		return "index";
+          return "index";
 	
 	}
-	
-	
 	
 	@GetMapping("/product")
 	public String viewProductPage(Model model , @ModelAttribute("product")Product product) {
@@ -171,28 +152,38 @@ public class ProductController {
 		
 	}
 	
-	
-	
-	
 	@GetMapping("/products")
-	public String viewProductPageInGrid(Model model,@AuthenticationPrincipal UsersDetails userD,@Param("search")String search) {
-		String userEmail = userD.getUsername();
-        Users user = userRepository.findByEmail(userEmail);
-		gridDetails(model, userD, 1,search);
+	public String viewProductPageInGrid(Model model,
+			@Param("search")String search,
+			@Param("pid")Integer pid,
+			@Param("mid")Integer mid,
+			@Param("cid")Integer cid,
+			@Param("sid")Integer sid) {
+		
+		
+		gridDetails(model,  1,search,pid,mid,cid,sid);
 		
 		return "productGrid";
 	}
 	
 	@GetMapping("/pag/{pagNum}")
-	public String gridDetails( Model model , @AuthenticationPrincipal UsersDetails userD,@PathVariable("pagNum") Integer pagNum,@Param("search")String search) {
-		String userEmail = userD.getUsername();
-        Users user = userRepository.findByEmail(userEmail);
+	public String gridDetails( Model model ,@PathVariable("pagNum") Integer pagNum,
+			@Param("search")String search,
+			@Param("pid")Integer pid,
+			@Param("mid")Integer mid,
+			@Param("cid")Integer cid,
+			@Param("sid")Integer sid) {
+		
         
         List<Product> listProducts = new ArrayList<>();
+        List<Category> categories = categoryRepository.findAll();
+        List<Manufacturer> brends = manufacturerRepository.findAll();
+        List<Country> countries = countryRepository.findAll();
+        List<Store> stores = storeRepository.findAll();
    
 	    Integer pageSize = 12;
 	    
-	    Page<Product>pag = productServiceImpl.grid(pagNum, pageSize,search);
+	    Page<Product>pag = productServiceImpl.grid(pagNum, pageSize,search,pid,mid,cid,sid);
 	    
 	    List<Product> listProductss = pag.getContent();
 	    
@@ -203,27 +194,25 @@ public class ProductController {
 	   	}
 			
 		}
-	    ShoppingCart cart =  user.getCart();
-		model.addAttribute("user", user);
-		model.addAttribute("cart", cart);
+	 
 		model.addAttribute("listProducts", listProducts);
 		model.addAttribute("currentPage",pagNum);
 		model.addAttribute("totalPages", pag.getTotalPages());
 		model.addAttribute("totalItems", pag.getTotalElements());
 		model.addAttribute("search", search);
+		model.addAttribute("categories", categories);
+		model.addAttribute("pid", pid);
+		model.addAttribute("brends", brends);
+		model.addAttribute("mid", mid);
+		model.addAttribute("countries", countries);
+		model.addAttribute("cid", cid);
+		model.addAttribute("stores", stores);
+		model.addAttribute("sid", sid);
 		return "productGrid";
 		
 	}
 	
-	
-	
-	
-	
-	
-		
-		
-		
-		@GetMapping("/showUpdateProductForm/{id}")
+	       @GetMapping("/showUpdateProductForm/{id}")
 		public String showUpdateProductForm (Model model,@PathVariable	("id") Integer id) {
 			
 			Product product = productRepository.findById(id).get();
@@ -246,40 +235,32 @@ public class ProductController {
 		
 	}
 		
-		
-		
 		@GetMapping("/products/productDetails/{id}")
-		public String profileDetailsComments(@PathVariable("id")Integer id,@AuthenticationPrincipal UsersDetails userD, Model model) {
+		public String profileDetailsComments(@PathVariable("id")Integer id, Model model) {
 			Product product = productRepository.findById(id).get();
-			String userEmail = userD.getUsername();
-	        Users user = userRepository.findByEmail(userEmail);
-	        profileDetails(id, userD, model,1 );
+			
+	        profileDetails(id, model,1 );
 			
 			
 			return "productDetails";
 			
 		}
 		
-		
-		
-		@GetMapping("/products/productDetails/{id}/pg/{pagNo}")
-		public String profileDetails(@PathVariable("id")Integer id,@AuthenticationPrincipal UsersDetails userD, Model model,@PathVariable("pagNo") Integer pagNo) {
+	        @GetMapping("/products/productDetails/{id}/pg/{pagNo}")
+		public String profileDetails(@PathVariable("id")Integer id, Model model,@PathVariable("pagNo") Integer pagNo) {
 			Product product = productRepository.findById(id).get();
-			String userEmail = userD.getUsername();
-	        Users user = userRepository.findByEmail(userEmail);
-	        Comment comment1 = new Comment();
-		//	List<Comment> comment = new ArrayList<>();
 			
+	        Comment comment1 = new Comment();
+		
 			Integer pageSize = 5;
 			Page<Comment>pg = productServiceImpl.comments(pagNo, pageSize,product);
 			
 			List<Comment> comment = pg.getContent();
 			     
-		
-			model.addAttribute("comment1", comment1);
+		    model.addAttribute("comment1", comment1);
 			model.addAttribute("product", product);
 			model.addAttribute("comment", comment);
-			model.addAttribute("user", user);
+			
 			model.addAttribute("currentPage",pagNo);
 			model.addAttribute("totalPages", pg.getTotalPages());
 			model.addAttribute("totalItems", pg.getTotalElements());
@@ -297,9 +278,9 @@ public class ProductController {
 	        comment1.setUser(user);
 	        comment1.setUserComment(comment.getUserComment());
 	        comment1.setTime(LocalDateTime.now());
-	            if(comment.getUserComment().isEmpty())
-	            	return "redirect:/products/productDetails/"+product.getId()+"?emptyPost";
-	        commentRepository.save(comment1);
+	          if(comment.getUserComment().isEmpty())
+	        return "redirect:/products/productDetails/"+product.getId()+"?emptyPost";
+	          commentRepository.save(comment1);
 	        
 	        return "redirect:/products/productDetails/"+product.getId()+"?post";
 		}
@@ -316,17 +297,11 @@ public class ProductController {
 			for (Comment comment : comments) {
 				if( comment.getProduct()== product) {
 					commentRepository.delete(comment);
-					
 				}
 			}
-			productRepository.deleteById(id);
-			 
-			return "redirect:/product";
+			   productRepository.deleteById(id);
+			 return "redirect:/product";
 		
 		}
-		
-	
-		
-		
 		
 }
