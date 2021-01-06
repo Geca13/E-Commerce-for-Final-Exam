@@ -60,8 +60,10 @@ public class BankController {
 	@Autowired
 	StoreRepository storeRepository;
 	@Autowired
-	private JavaMailSender sender;
+	CompanyRepository companyRepository;
 	
+	@Autowired
+	private JavaMailSender sender;
 	
 	
 	@GetMapping("/payment/{id}")
@@ -72,92 +74,80 @@ public class BankController {
 		ShoppingCart cart = scRepository.findById(id).get();
 	    Users user = userRepository.findById(id).get();
 	    List<CartProducts> products = cart.getProducts();
-		model.addAttribute("card", card);
-		model.addAttribute("cardBrend", cardBrend);
-		model.addAttribute("cart", cart);
-		model.addAttribute("user", user);
-		model.addAttribute("products", products);
+	    List<Month>months = monthRepository.findAll();
+	    List<Year> years = yearRepository.findAll();
+		 model.addAttribute("card", card);
+		 model.addAttribute("cardBrend", cardBrend);
+		 model.addAttribute("cart", cart);
+		 model.addAttribute("user", user);
+		 model.addAttribute("products", products);
+		 model.addAttribute("months", months);
+		 model.addAttribute("years", years);
 		
-		
-		return "paymentForm";
+		      return "paymentForm";
 		}
-	@PostMapping("/payment/{id}")	
-	public String completePayment(@ModelAttribute("card") CreditCard card,@PathVariable("id") Integer id, @Param(value = "cardNumber")
-	String cardNumber,@Param(value = "cardholderName") String cardholderName, @Param(value = "cvv")
-	String cvv, @Param(value="month")String month,@Param(value="month")String year , Model model, Errors errors)   {
-		
-		
 	
+	@PostMapping("/payment/{id}")	
+	public String completePayment(@PathVariable("id") Integer id, @Param(value = "cardNumber")
+	String cardNumber,@Param(value = "cardholderName") String cardholderName, @Param(value = "cvv")
+	String cvv, @Param(value="month")Month month,@Param(value="year")Year year , Model model, Errors errors)   {
 		
-        ShoppingCart cart1 = scRepository.findById(id).get();
-        
-        
-        
-        	
-        	CreditCard cc = ccRepository.findByCardNumber(cardNumber);
+		 Company company = companyRepository.findByAccountNumber("0123456789");
+		 ShoppingCart cart1 = scRepository.findById(id).get();
+         CreditCard card = ccRepository.findByCardNumber(cardNumber);
+            model.addAttribute("card", card);
         	if(ccRepository.existsByCardNumber(cardNumber)) {
         		
-        	
-		
-		if(!cc.getCardholderName().equals(cardholderName)) {
-			
-				return"redirect:/payment/"+ cart1.getId()+"?errorName";			
-		 }
-		
-		 if(!cc.getCvv().equals(cvv)) {
-			 
-			 return"redirect:/payment/"+ cart1.getId()+"?errorCvv";
-		 }
-		 
-		 if(!cc.getMonth().equals( month)) {
-			 
-			 return"redirect:/payment/"+ cart1.getId()+"?errorMonth";
-		 }
-		 if(!cc.getYear().equals(year)) {
-			 
-			 return"redirect:/payment/"+ cart1.getId()+"?errorYear";
-		 }
-		
-		 if(cc.getBalance()< cart1.getTotal()) {
-			 
-			 return"redirect:/payment/"+ cart1.getId()+"?errorBalance";
-			}
-			cc.setBalance(cc.getBalance()-cart1.getTotal());
-			
-			ccRepository.save(cc);
+        	   if(!card.getCardholderName().equals(cardholderName)) {
+			         return"redirect:/payment/"+ cart1.getId()+"?errorName";			
+		       }
+		       if(!card.getCvv().equals(cvv)) {
+			         return"redirect:/payment/"+ cart1.getId()+"?errorCvv";
+		       }
+		       if(card.getMonth()!=month) {
+			         return"redirect:/payment/"+ cart1.getId()+"?errorMonth";
+		       }
+		       if(card.getYear()!= year) {
+			         return"redirect:/payment/"+ cart1.getId()+"?errorYear";
+			   }
+		       if(card.getBalance()< cart1.getTotal()) {
+			         return"redirect:/payment/"+ cart1.getId()+"?errorBalance";
+			   }
+			   card.setBalance(card.getBalance()-cart1.getTotal());
+			   company.setAccountBalance(company.getAccountBalance() + cart1.getTotal());
+			     companyRepository.save(company);
+			     ccRepository.save(card);
 			
 			for (CartProducts product : cart1.getProducts()) {
 				Store store = product.getProduct().getStore();
 				
 				store.setBalance(store.getBalance()+(product.getItemTotal() * 0.9));
 				storeRepository.save(store);
-			}
-			
-			String email = cc.getContact();
-			
-			Double amount = cart1.getTotal();
-			
-			try {
 				
+			   }
+			
+			payToStoresAutomatic();
+			
+		 String email = card.getContact();
+			
+		 Double amount = cart1.getTotal();
+			
+			
+			   try {
 				
-				sendPaymentInfo(email , cc, amount);
+				sendPaymentInfo(email , card, amount);
 				
 			}catch (UnsupportedEncodingException |MessagingException ex) {
 				model.addAttribute("error", ex.getMessage());
 				model.addAttribute("error", "Something bad happened while sending the email.");
 			}
+			         return "redirect:/newOrder";
 			
-			
-			return "redirect:/newOrder";
-			
-			
-		}else {
-			
-			return"redirect:/payment/"+ cart1.getId()+"?errorNumber";
-		
-		
+			}else {
+			         return"redirect:/payment/"+ cart1.getId()+"?errorNumber";
 		
 		}
+        	
 	}
 
 	private void sendPaymentInfo(String email, CreditCard cc, Double amount) throws UnsupportedEncodingException, MessagingException {
@@ -165,20 +155,53 @@ public class BankController {
 		MimeMessage message = sender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
 		
-		helper.setFrom("Geca@geca.com", "Java imitacija");
-		helper.setTo(email);
+		  helper.setFrom("Geca@geca.com", "Java imitacija");
+		  helper.setTo(email);
 		
 		String subject = "Payment ";
 		String content =  "Payment has been made from one of your Credit card with number  " + cc.getCardNumber()+ 
 				". The amount that was payed  was  " + amount +"$" + ". The new balance on your card now is: "+ cc.getBalance() + "$" ;
 		
-		helper.setSubject(subject);
-		helper.setText(content, true);
-		sender.send(message);
-		
-		
-		
-	}
+		  helper.setSubject(subject);
+		  helper.setText(content, true);
+		 sender.send(message);
+		 
+		}
 	
+	 public void payToStoresAutomatic() {
+	 
+		List<Store> stores = storeRepository.findAll();
+		for (Store store : stores) {
+			 if (store.getBalance() > 20000.00 ) {
+			   Company company = companyRepository.findByAccountNumber(store.getAccountNumber());
+				 company.setAccountBalance(company.getAccountBalance() + store.getBalance());
+			   Company comp = companyRepository.findByAccountNumber("0123456789");
+				 comp.setAccountBalance(comp.getAccountBalance()-store.getBalance());
+				   companyRepository.save(company);
+				   companyRepository.save(comp);
+				 store.setBalance(0.00);
+				   storeRepository.save(store);
 
-}
+			}
+		}
+	}
+	 
+	 @GetMapping("/pay/{id}")
+	 public String payToStoresManually(@PathVariable("id")Integer id) {
+		 
+		 Company comp = companyRepository.findByAccountNumber("0123456789");
+		 Store store = storeRepository.findById(id).get();
+		 Company company = companyRepository.findByAccountNumber(store.getAccountNumber());
+		   company.setAccountBalance(company.getAccountBalance() + store.getBalance());
+		   comp.setAccountBalance(comp.getAccountBalance() - store.getBalance());
+		 
+		   store.setBalance(0.00);
+		         companyRepository.save(company);
+		         companyRepository.save(comp);
+		         storeRepository.save(store);
+		 
+		           return "redirect:/administration";
+		 
+	 }
+	
+	}
