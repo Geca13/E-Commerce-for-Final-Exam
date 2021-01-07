@@ -75,15 +75,16 @@ public class ProductController {
 		 List<Store> stores = storeRepository.findAll();
 		 List<Category> categories = categoryRepository.findAll();
 	     List<Country> countries = countryRepository.findAll();
-		
+	     List<Manufacturer> manufacturers = manufacturerRepository.findAll();
+		  
 		  model.addAttribute("product", product);
 		  model.addAttribute("stores", stores);
 	      model.addAttribute("categories", categories);
 		  model.addAttribute("countries", countries);
-		
-		       return "add_product";
-	
-}
+		  model.addAttribute("manufacturers", manufacturers);
+		     
+		  return "add_product";
+	}
 	
 	  @PostMapping("/saveProduct")
 	  public  String createProduct(Product product, MultipartFile file){
@@ -92,8 +93,51 @@ public class ProductController {
 			
 		       return "redirect:/product";
 	}
+	  
+	  @GetMapping("/showNewCategoryForm")
+	  public String showNewCategoryForm (Model model) {
+		
+		Category category = new Category();
+		 List<Category> categories = categoryRepository.findAll();
+		
+		   model.addAttribute("category", category);
+		   model.addAttribute("categories", categories);
+		     
+		      return "add_category";
+	}
 	
-	  @GetMapping("/")
+	  @PostMapping("/saveCategory")
+	  public  String createCategory(Category category, MultipartFile file){
+		
+		productServiceImpl.newCategory(category, file);
+			
+		       return "redirect:/showNewCategoryForm";
+	}
+	  
+	  @GetMapping("/showNewManufacturerForm")
+	  public String showNewManufatcurerForm (Model model) {
+		
+		Manufacturer manufacturer = new Manufacturer();
+		List<Manufacturer> manufacturers = manufacturerRepository.findAll();
+		List<Country> countries = countryRepository.findAll();
+		
+		  model.addAttribute("manufacturer", manufacturer);
+		  model.addAttribute("manufacturers", manufacturers);
+		  model.addAttribute("countries", countries);
+		  
+		
+		       return "add_manufacturer";
+	}
+	
+	  @PostMapping("/saveManufacturer")
+	  public  String createManufacturer(Manufacturer manufacturer){
+		
+		  productServiceImpl.newManufacturer(manufacturer);
+			
+		       return "redirect:/showNewManufacturerForm";
+	}
+	  
+	   @GetMapping("/")
 	  public String index(Model model, @ModelAttribute ("product")Product product,@AuthenticationPrincipal UsersDetails userD,Pageable pageable) {
 		String userEmail = userD.getUsername();
         Users user = userRepository.findByEmail(userEmail);
@@ -102,7 +146,6 @@ public class ProductController {
          List<Product> last10= productRepository.findAll();
      //   List<Product> last10 = all.subList(all.size()-8,all.size());
            model.addAttribute("last10", last10);
-        
                return "index";
     }
 	
@@ -223,8 +266,10 @@ public class ProductController {
 			  product1.setCountry(product.getCountry());
 			  product1.setManufacturer(product.getManufacturer());
 			  product1.setStore(product.getStore());
+			  
+			  productServiceImpl.update(product1);
 			
-			productRepository.save(product1);
+			
 			  
 		      return "redirect:/";
 	}
@@ -293,6 +338,5 @@ public class ProductController {
 			   productRepository.deleteById(id);
 			 return "redirect:/product";
 		
-		}		
-		
-}
+		}				
+        }
