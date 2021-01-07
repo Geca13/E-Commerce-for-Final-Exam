@@ -1,31 +1,31 @@
 package com.example.aaa.bank.controller;
 
-
-
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 import java.util.List;
-
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
+import com.example.aaa.admin.entity.Payment;
+import com.example.aaa.admin.repository.PaymentRepository;
 import com.example.aaa.bank.entity.CardBrend;
+import com.example.aaa.bank.entity.Company;
 import com.example.aaa.bank.entity.CreditCard;
 import com.example.aaa.bank.entity.Month;
 import com.example.aaa.bank.entity.Year;
 import com.example.aaa.bank.repository.CardBrendRepository;
+import com.example.aaa.bank.repository.CompanyRepository;
 import com.example.aaa.bank.repository.CreditCardRepository;
 import com.example.aaa.bank.repository.MonthRepository;
 import com.example.aaa.bank.repository.YearRepository;
@@ -36,10 +36,8 @@ import com.example.aaa.shoppingCart.entity.ShoppingCart;
 import com.example.aaa.shoppingCart.repository.ShoppingCartRepository;
 import com.example.aaa.users.entity.Users;
 import com.example.aaa.users.repository.UsersRepository;
-import com.example.aaa.users.service.UserNotFoundException;
 import com.example.aaa.users.service.UsersDetails;
 
-import lombok.val;
 
   
 
@@ -61,6 +59,8 @@ public class BankController {
 	StoreRepository storeRepository;
 	@Autowired
 	CompanyRepository companyRepository;
+	@Autowired
+	PaymentRepository paymentRepository;
 	
 	@Autowired
 	private JavaMailSender sender;
@@ -87,7 +87,8 @@ public class BankController {
 		      return "paymentForm";
 		}
 	
-	@PostMapping("/payment/{id}")	
+	@PostMapping("/payment/{id}")
+	@Transactional(readOnly = true)
 	public String completePayment(@PathVariable("id") Integer id, @Param(value = "cardNumber")
 	String cardNumber,@Param(value = "cardholderName") String cardholderName, @Param(value = "cvv")
 	String cvv, @Param(value="month")Month month,@Param(value="year")Year year , Model model, Errors errors)   {
@@ -104,10 +105,10 @@ public class BankController {
 		       if(!card.getCvv().equals(cvv)) {
 			         return"redirect:/payment/"+ cart1.getId()+"?errorCvv";
 		       }
-		       if(card.getMonth()!=month) {
+		       if(card.getMonth() !=month) {
 			         return"redirect:/payment/"+ cart1.getId()+"?errorMonth";
 		       }
-		       if(card.getYear()!= year) {
+		       if(card.getYear() != year) {
 			         return"redirect:/payment/"+ cart1.getId()+"?errorYear";
 			   }
 		       if(card.getBalance()< cart1.getTotal()) {
@@ -126,14 +127,10 @@ public class BankController {
 				
 			   }
 			
-			payToStoresAutomatic();
-			
 		 String email = card.getContact();
-			
 		 Double amount = cart1.getTotal();
 			
-			
-			   try {
+			try {
 				
 				sendPaymentInfo(email , card, amount);
 				
@@ -141,6 +138,7 @@ public class BankController {
 				model.addAttribute("error", ex.getMessage());
 				model.addAttribute("error", "Something bad happened while sending the email.");
 			}
+			      //   payToStoresAutomatic();
 			         return "redirect:/newOrder";
 			
 			}else {
@@ -169,7 +167,7 @@ public class BankController {
 		}
 	
 	 public void payToStoresAutomatic() {
-	 
+		Payment payment = new Payment();
 		List<Store> stores = storeRepository.findAll();
 		for (Store store : stores) {
 			 if (store.getBalance() > 20000.00 ) {
@@ -177,6 +175,11 @@ public class BankController {
 				 company.setAccountBalance(company.getAccountBalance() + store.getBalance());
 			   Company comp = companyRepository.findByAccountNumber("0123456789");
 				 comp.setAccountBalance(comp.getAccountBalance()-store.getBalance());
+				 
+				 payment.setCompany(company);
+				 payment.setSum(store.getBalance());
+				 payment.setLocalDateTime(LocalDateTime.now());
+				   paymentRepository.save(payment);
 				   companyRepository.save(company);
 				   companyRepository.save(comp);
 				 store.setBalance(0.00);
@@ -188,13 +191,17 @@ public class BankController {
 	 
 	 @GetMapping("/pay/{id}")
 	 public String payToStoresManually(@PathVariable("id")Integer id) {
-		 
+		 Payment payment = new Payment();
 		 Company comp = companyRepository.findByAccountNumber("0123456789");
 		 Store store = storeRepository.findById(id).get();
 		 Company company = companyRepository.findByAccountNumber(store.getAccountNumber());
 		   company.setAccountBalance(company.getAccountBalance() + store.getBalance());
 		   comp.setAccountBalance(comp.getAccountBalance() - store.getBalance());
 		 
+		     payment.setCompany(company);
+			 payment.setSum(store.getBalance());
+			 payment.setLocalDateTime(LocalDateTime.now());
+			 paymentRepository.save(payment);
 		   store.setBalance(0.00);
 		         companyRepository.save(company);
 		         companyRepository.save(comp);
