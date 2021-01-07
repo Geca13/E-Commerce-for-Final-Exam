@@ -9,11 +9,11 @@ import com.example.aaa.bank.entity.CreditCard;
 @Repository
 public interface CreditCardRepository extends JpaRepository<CreditCard, Integer> {
 	
-	Boolean existsByCardNumber(@Param(value = "cardNumber") String cardNumber);
+        Boolean existsByCardNumber(@Param(value = "cardNumber") String cardNumber);
 	
 	CreditCard findByCardNumber(@Param(value = "cardNumber") String cardNumber);
 	
-    Boolean existsByCardholderName(@Param(value = "cardholderName") String cardholderName);
+        Boolean existsByCardholderName(@Param(value = "cardholderName") String cardholderName);
 	
 	CreditCard findByCardholderName(@Param(value = "cardholderName") String cardholderName);
 	
@@ -21,8 +21,12 @@ public interface CreditCardRepository extends JpaRepository<CreditCard, Integer>
 	
 	CreditCard findByCvv(@Param(value = "cvv") String cvv);
 	
-    Boolean existsByMonth(@Param(value = "month") String month);
+        Boolean existsByMonth(@Param(value = "month") Month month);
 	
-	CreditCard findByMonth(@Param(value = "month") String month);
+	CreditCard findByMonth(@Param(value = "month") Month month);
+	
+        Boolean existsByYear(@Param(value = "year") Year year);
+	
+	CreditCard findByYear(@Param(value = "year") Year year);
 
 }
