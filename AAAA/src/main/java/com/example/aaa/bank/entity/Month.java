@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class Month {
 	
 	@Id
-	//@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	private String month;
