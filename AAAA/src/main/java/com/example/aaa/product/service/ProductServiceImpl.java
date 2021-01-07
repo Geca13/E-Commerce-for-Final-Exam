@@ -88,7 +88,7 @@ public class ProductServiceImpl  {
 					e.printStackTrace();
 				}
 		        
-		        //product.setImage(fileName); 
+		        
 		        if(storeRepository.existsByStoreName(product.getStore().getStoreName())) {
 		        	Store store1 = storeRepository.findByStoreName(product.getStore().getStoreName());
 		        	product.setStore(store1);
@@ -101,23 +101,48 @@ public class ProductServiceImpl  {
     			product.setCategory(cat);
     		    }
 		
-	        	if(countryRepository.existsByCountryName(product.getCountry().getCountryName())) {
-	        		Country countryy = countryRepository.findByCountryName(product.getCountry().getCountryName());
-	        		
-	        		product.setCountry(countryy);
-	        	}
-	        	
+	  
 	        	if(manufacturerRepository.existsByManufacturerName(product.getManufacturer().getManufacturerName())) {
 	    			
 	    	      	Manufacturer man = manufacturerRepository.findByManufacturerName(product.getManufacturer().getManufacturerName());
 	    			
 	    			product.setManufacturer(man);
+	    			product.setCountry(man.getCountry());
 	    		}
-	        	
-	        	
-    		        product.setTime(LocalDateTime.now());
+	        
+	                product.setTime(LocalDateTime.now());
     		             productRepository.save(product);
 		}
+	 
+	 public void update(Product product) {
+    	 
+            if(storeRepository.existsByStoreName(product.getStore().getStoreName())) {
+	        	Store store1 = storeRepository.findByStoreName(product.getStore().getStoreName());
+	        	product.setStore(store1);
+	        }
+	
+	        if(categoryRepository.existsByProductCategory(product.getCategory().getProductCategory())) {
+			
+			Category cat = categoryRepository.findByProductCategory(product.getCategory().getProductCategory());
+			
+			product.setCategory(cat);
+		    }
+	
+        	if(countryRepository.existsByCountryName(product.getCountry().getCountryName())) {
+        		Country country = countryRepository.findByCountryName(product.getCountry().getCountryName());
+        		
+        		product.setCountry(country);
+        	}
+        	
+        	if(manufacturerRepository.existsByManufacturerName(product.getManufacturer().getManufacturerName())) {
+    			
+    	      	Manufacturer man = manufacturerRepository.findByManufacturerName(product.getManufacturer().getManufacturerName());
+    			
+    			product.setManufacturer(man);
+    		}
+        	
+		        productRepository.save(product);
+	   }
 	
         public Page<Comment> comments(Integer pageNumber, Integer pageSize, Product product) {
 		
@@ -126,5 +151,35 @@ public class ProductServiceImpl  {
 		                 return commentRepository.findAllByProductId(product.getId(),pageable );
 	
        }
+        
+        public void newCategory(Category category,MultipartFile file) {
+        	
+        	
+        	String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+	        if(fileName.contains("..")) {
+	        	System.out.println("not a valid file");
+	        }
+	        try {
+				category.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
+			} catch (IOException e) {
+				
+				e.printStackTrace();
+			}  
+	        
+	        categoryRepository.save(category);
+        	
+        }
+        
+        public void newManufacturer(Manufacturer manufacturer) {
+        	
+        	if(countryRepository.existsByCountryName(manufacturer.getCountry().getCountryName())) {
+        		Country country = countryRepository.findByCountryName(manufacturer.getCountry().getCountryName());
+        		
+        		manufacturer.setCountry(country);
+        	}
+        	
+        	manufacturerRepository.save(manufacturer);
+        	
+        }
 
 }
