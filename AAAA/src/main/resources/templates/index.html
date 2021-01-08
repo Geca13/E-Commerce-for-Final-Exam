@@ -9,6 +9,10 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
     integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
   <style>
+ img {
+  border-radius: 50%;
+  
+}
     </style>
 </head>
 
@@ -50,19 +54,13 @@
 
 
 <div class="container">
-
-
-
-
-
-
-  <br>
+ <br>
   <hr>
   <h3>Newest Products</h3>
   
   <div class="row">
   <div class="col-xl-3" th:each="product : ${last10}">
-   <div class="card" style="width: 15rem;">
+   <div class="card " style="width: 15rem;">
     <img th:src="*{'data:image/png;base64,'+{product.image}}" style="width:238px" >
      <div class="card-body">
       <p class="card-title" th:text = "${product.productName}"></p>
@@ -90,14 +88,46 @@
  
  <hr>
  
+ <h3>Browse by Categories</h3>
  
-
- 
- 
- 
+ <form th:action="@{/products}">
+ <div class="row">
+  <div class="col-xl-3" th:each="category : ${categories}" >
+   <div class="card border-0" style="width: 14rem;">
+    <img th:src="*{'data:image/png;base64,'+{category.image}}" style="width:220px" >
+     <div class="card-body">
+      <p class="card-title" th:text = "${category.productCategory}"></p>
+      <div class="col-auto my-1">
+     <button type="submit" name="pid" th:value="${category.id}" class="btn btn-primary">See Products</button>
+    </div>
+      <hr>
+      
+    </div>
    
-  
-  
+    
+   </div>
+  </div>
+ </div>
+ </form>
+ <hr>
+ <h3>Browse by Stores</h3>
+ <form th:action="@{/products}">
+ <div class="row">
+  <div class="col-xl-3" th:each="store : ${stores}" >
+   <div class="card " style="width: 18rem;">
+    <img th:src="*{'data:image/png;base64,'+{store.image}}" style="width:220px" >
+     <div class="card-body">
+      <p class="card-title" th:text = "${store.storeName}"></p>
+      <p class="card-title"  th:text = "${byStores}"></p>
+      <div class="col-auto my-1">
+     <button type="submit" name="sid" th:value="${store.id}" class="btn btn-primary">See Products</button>
+    </div>
+      <hr>
+    </div>
+   </div>
+  </div>
+ </div>
+  </form>
 </div>
 
 
