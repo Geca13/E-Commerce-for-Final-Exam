@@ -23,12 +23,14 @@ public class StoreController {
 	@GetMapping("/showNewStoreForm")
 	public String showNewStoreForm (Model model) {
 		
-		Store store = new Store();
-		List<Bank> banks = bankRepository.findAll();
+	     Store store = new Store();
+             List<Bank> banks = bankRepository.findAll();
+	     List<Store> stores = storeRepository.findAll();
 		model.addAttribute("store", store);
 		model.addAttribute("banks", banks);
+		model.addAttribute("stores", stores);
 		
-		return "create_store";
+		       return "create_store";
 	}
 	
 	@PostMapping("/saveStore")
