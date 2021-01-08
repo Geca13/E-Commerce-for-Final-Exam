@@ -56,9 +56,6 @@
 <div class="container">
 <br>
 
-     
-
-
  <h1>Create New Store</h1>
   
   <div th:if="${error != null}">
@@ -107,9 +104,57 @@
   
   </form>
   <br>
-      <a th:href="@{/products}" class="nav-item nav-link" >Go to Grid View</a>
+   <br>
+  <h3>Stores</h3>
+   <br>
+   <table class="table table-striped ">
+  <thead>
+    <tr>
+      <th scope="col">
+     <a th:href="@{'/pagess/' + ${currentPage} + '?sortField=storeId&sortDir=' + ${reverseSortDir}}">Id</a> 
+      </th>
+      <th scope="col">
+      <a th:href="@{'/pagess/' + ${currentPage} + '?sortField=productName&sortDir=' + ${reverseSortDir}}">Store </a>
+       </th>
+      <th scope="col">
+     <a th:href="@{'/pagess/' + ${currentPage} + '?sortField=storeId&sortDir=' + ${reverseSortDir}}">Email</a> 
+      </th>
+      <th scope="col">
+      <a th:href="@{'/pagess/' + ${currentPage} + '?sortField=productName&sortDir=' + ${reverseSortDir}}">Bank </a>
+       </th>
+       <th scope="col">
+      <a th:href="@{'/pagess/' + ${currentPage} + '?sortField=productName&sortDir=' + ${reverseSortDir}}">Account Number </a>
+       </th>
+        <th scope="col">
+      <a th:href="@{'/pagess/' + ${currentPage} + '?sortField=productName&sortDir=' + ${reverseSortDir}}">Balance </a>
+       </th>
+       <th scope="col"> 
+      <a th:href="@{'/pagess/' + ${currentPage} + '?sortField=image&sortDir=' + ${reverseSortDir}}"></a>
+       </th>
+        <th scope="col"> 
+      <a th:href="@{'/pagess/' + ${currentPage} + '?sortField=image&sortDir=' + ${reverseSortDir}}">Image</a>
+       </th>
+      </tr>
+  </thead>
+  <tbody>
+   
+    <tr th:each="store : ${stores}">
+   
+      <td th:text="${store.id}"></td>
+      <td th:text="${store.storeName}"></td>
+      <td th:text="${store.email}"></td>
+      <td th:text="${store.bank.bankName}"></td>
+      <td th:text="${store.accountNumber}"></td>
+      <td th:text="${store.balance}"></td>
+      <td ><a th:href="@{/pay/{id}(id=${store.id})}" class="btn btn-outline-primary">  Pay</a></td>
+      <td> <img th:src="*{'data:image/png;base64,'+{store.image}}" style="width:200px"></td> 
       
-      <a th:href="@{/product}" class="nav-item nav-link" >Go To Table View</a>
+    </tr>
+     </tbody>
+</table>
+  
+  <br>
+      <a th:href="@{/administration}" class="nav-item nav-link" >BACK</a>
   
 </div>
 
