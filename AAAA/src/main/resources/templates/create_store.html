@@ -56,9 +56,14 @@
 <div class="container">
 <br>
 
+     
+
 
  <h1>Create New Store</h1>
   
+  <div th:if="${error != null}">
+     <div class="alert alert-danger">[[${error}]]</div>
+    </div>
   <form action="#" th:action="@{/saveStore}" th:object="${store}" method="post" enctype="multipart/form-data">
   
   <div class="form-group row">
@@ -75,32 +80,30 @@
     </div>
   </div>
   
-  <div class="form-group row">
-    <label for="inputQty" class="col-sm-2 col-form-label">Bank</label>
-    <div class="col-sm-10">
-      <input type="text" th:field="*{bank.bankName}" class="form-control" id="inputQty"required>
-    </div>
-  </div>
+  <div class="form-group">
+    <label for="exampleFormControlSelect2">Select Bank</label>
+    <select class="form-control" th:field="*{bank.bankName}"  id="exampleFormControlSelect2" required>
+    
+      <option th:each="bank : ${banks}"
+      
+      th:value="${bank.bankName}"
+            th:text="${bank.bankName }"/>
+       </select>
+   </div>
   
   <div class="form-group row">
-    <label for="inputKeyword" class="col-sm-2 col-form-label">Keyword</label>
+    <label for="inputKeyword" class="col-sm-2 col-form-label">Account Number</label>
     <div class="col-sm-10">
       <input type="text" th:field="*{accountNumber}" class="form-control" id="inputKeyword"required>
     </div>
   </div>
   
-     
-  
-  <!--  
    <div class="form-group">
-    <label for="exampleFormControlFile1">Upload image:</label>
+    <label for="exampleFormControlFile1">Upload logo:</label>
     <input type="file" name="file" class="form-control-file" id="exampleFormControlFile1">
   </div>
-  -->
-               
-
   
- <button type="submit" class="btn btn-info col-2">Save Store</button>
+  <button type="submit" class="btn btn-info col-2">Save Store</button>
   
   </form>
   <br>
