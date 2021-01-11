@@ -9,55 +9,30 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <style>
-  
+  .foot {
+      background-color: gray;
+      padding-top: 50px;
+    }
     </style>
 </head>
 
 
 <body>
-
-
-	
-	<nav class="navbar navbar-expand-lg navbar-light bg-warning">
-        <a class="navbar-brand" href="#">DZIKLE'S SHOP</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-warning">
+        <a class="navbar-brand" href="#">DZIKLE'S EXPRESS</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto topnav">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Shop Pre-Owned</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Shop New Cars</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Clearence Event</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Resources
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Carfax</a>
-                        <a class="dropdown-item" href="#">Carproof</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Omnivic</a>
-                    </div>
-                </li>
-                
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link btn btn-primary text-white" type="button" href="#" data-toggle="modal" data-target="#myModal">Sign In/Register</a>                  
-                </li>
-                
-            </ul>
+          <ul class="navbar-nav ml-auto topnav">
+            <li class="nav-item active">
+              <a th:href="@{/products}" class="nav-item nav-link" >Products</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link btn btn-primary text-white" type="button" href="#" data-toggle="modal" data-target="#myModal">Sign In/Register</a>                  
+            </li>
+           </ul>
         </div>
 
             <!-- The Modal -->
@@ -84,19 +59,17 @@
       <div class="alert alert-info">You have been logged out.</div>
      </div>
     
-    
-    
     <div class="form-group">
-    <label for="username">Username</label>
-    <input type="text" id="username" name="username" class="form-control"
-       autofocus="autofocus" placeholder="Username" />
-     </div>
+     <label for="username">Username</label>
+     <input type="text" id="username" name="username" class="form-control"
+       autofocus="autofocus" placeholder="Username" required/>
+    </div>
      
-     <div class="form-group">
-      <label for="password">Password</label> 
-      <input type="password" id="password" name="password" class="form-control"
-       placeholder="Password" />
-     </div>
+    <div class="form-group">
+     <label for="password">Password</label> 
+     <input type="password" id="password" name="password" class="form-control"
+       placeholder="Password" required/>
+    </div>
      
       <div class="form-group">
       <div class="row">
@@ -120,51 +93,145 @@
      </p>
      
      </div>
-     
-     
-
-                
-            </div>
+      </div>
         </div>
     </div>
-            
-
-    </nav>
-
-
-<div class="container">
-<h2>All Products</h2>
-
-
-
-  <br>
-   <a th:href="@{/search}" class="btn btn-outline-primary">Too messy? yeah i know ... Go to our search cretiria page...</a>
-
- <br> <br>
+   </nav>
+<h3>Special offers</h3>
+  
+   <div class="container-fluid px-0">
+    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner bg-info" role="listbox">
+            <div class="carousel-item active">
+                <div class="d-flex align-items-center justify-content-center min-vh-100">
+                    <div class="card mb-3 border-0"><span>
+                    <img class="card-img-top border-0" src="/img/logo2.png" alt="Card image cap"style="width:500px" height="300">
+                    <img class="card-img-top border-0" src="/img/logo.png" alt="Card image cap"style="width:400px"></span>
+                    <a href="https://codeacademy.mk/" target="_blank" class="btn btn-outline-primary"> Learn more now...</a>
+            </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="d-flex align-items-center justify-content-center min-vh-100">
+                    <div class="card mb-3 border-0"><span>
+                    <img class="card-img-top border-0" src="/img/dimitar.png" alt="Card image cap"style="width:500px">
+                    <img class="card-img-top border-0" src="/img/akademija.jpg" alt="Card image cap"style="width:400px"></span>
+                    <a href="https://codeacademy.mk/java-academy" target="_blank" class="btn btn-outline-primary"> Learn more now...</a>
+            </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="d-flex align-items-center justify-content-center min-vh-100">
+                    <div class="card mb-3 border-0"><span>
+                    <img class="card-img-top border-0" src="/img/risto2.png" alt="Card image cap"style="width:500px">
+ <img class="card-img-top border-0" src="/img/risto1.jpg" alt="Card image cap"style="width:400px"></span>
+  <a href="https://codeacademy.mk/courses" target="_blank" class="btn btn-outline-primary"> Learn more now...</a>
+</div>
+                </div>
+            </div>
+        </div>
+        
+        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+</div>
     
-    
-
- <div class="row">
-  <div class="col-xl-3" th:each="product : ${products}">
-   <div class="card" style="width: 15rem;">
+    <div class="container">
+  <h3>Newest Products</h3>
+  
+  <div class="row">
+  <div class="col-xl-3" th:each="product : ${last10}">
+   <div class="card " style="width: 15rem;">
     <img th:src="*{'data:image/png;base64,'+{product.image}}" style="width:238px" >
      <div class="card-body">
       <p class="card-title" th:text = "${product.productName}"></p>
       <hr>
       <p class="card-text" th:text = "${product.productPrice}"></p>
+     
 
+
+    
       <a th:href="@{/products/productDetails/{id}(id=${product.id})}" class="btn btn-primary">See details</a>
+      <a th:href="@{/shoppingCart/{id}(id=${product.id})}" class="btn btn-success btn-sm">Add to Cart</a>
       
+      
+       <div sec:authorize="hasRole('ROLE_ADMIN')">
+        <a th:href="@{/showUpdateProductForm/{id}(id=${product.id})}" class="btn btn-outline-success">Update</a>
+        <a th:href="@{/deleteProduct/{id}(id=${product.id})}" class="btn btn-outline-danger">Delete</a> 
+       </div>
 
     </div>
    </div>
   </div>
  </div>
-
-<br>
-
-
+ 
+ 
+ 
+ <hr>
+ 
+ <h3>Browse by Categories</h3>
+ 
+ <form th:action="@{/products}">
+ <div class="row">
+  <div class="col-xl-3" th:each="category : ${categories}" >
+   <div class="card border-0" style="width: 14rem;">
+    <img th:src="*{'data:image/png;base64,'+{category.image}}" style="width:220px" >
+     <div class="card-body">
+      <p class="card-title" th:text = "${category.productCategory}"></p>
+      <div class="col-auto my-1">
+     <button type="submit" name="pid" th:value="${category.id}" class="btn btn-primary">See Products</button>
+    </div>
+      <hr>
+      
+    </div>
+   
+    
+   </div>
+  </div>
+ </div>
+ </form>
+ <hr>
+ <h3>Browse by Stores</h3>
+ <form th:action="@{/products}">
+ <div class="row">
+  <div class="col-xl-3" th:each="store : ${stores}" >
+   <div class="card " style="width: 18rem;">
+    <img th:src="*{'data:image/png;base64,'+{store.image}}" style="width:220px" >
+     <div class="card-body">
+      <p class="card-title" th:text = "${store.storeName}"></p>
+      <p class="card-title"  th:text = "${byStores}"></p>
+      <div class="col-auto my-1">
+     <button type="submit" name="sid" th:value="${store.id}" class="btn btn-primary">See Products</button>
+    </div>
+      <hr>
+    </div>
+   </div>
+  </div>
+ </div>
+  </form>
 </div>
+ <div class="foot">
+   <div class="container">
+     <div class="row">
+       <div class="col-sm">
+         </div>
+           <div class="col-sm">
+             <h3>Gzikle's Shop powered by Marjan Geca Karafiloski . All right reserved 2020/2021</h3>
+           </div>
+          <div class="col-sm">
+         </div>
+        </div>
+      </div>
+      <br>
+    </div>
+
+  
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
     integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
