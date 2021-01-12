@@ -1,19 +1,13 @@
 package com.example.aaa;
 
-
-
-
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-
 import com.example.aaa.users.entity.Users;
+import com.example.aaa.users.service.EmailAllreadyExistExceptionMessage;
 import com.example.aaa.users.service.InvalidPasswordException;
 import com.example.aaa.users.service.UsersService;
 
@@ -45,7 +39,7 @@ public class MainController {
 		
 		try {
 			usersService.save(userDto);
-		} catch (InvalidPasswordException e) {
+		} catch (InvalidPasswordException | EmailAllreadyExistExceptionMessage e) {
 			model.addAttribute("error", e.getMessage());
 			return "signUpForm";
 		}
@@ -54,14 +48,6 @@ public class MainController {
 	}
 	
 	
-	
-	
-	
-	
-	
-
 }
- 
-
 
 
