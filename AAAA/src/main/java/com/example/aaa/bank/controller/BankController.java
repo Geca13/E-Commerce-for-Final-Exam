@@ -11,9 +11,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,8 +25,6 @@ import com.example.aaa.bank.entity.Year;
 import com.example.aaa.bank.repository.CardBrendRepository;
 import com.example.aaa.bank.repository.CompanyRepository;
 import com.example.aaa.bank.repository.CreditCardRepository;
-import com.example.aaa.bank.repository.MonthRepository;
-import com.example.aaa.bank.repository.YearRepository;
 import com.example.aaa.product.entity.Store;
 import com.example.aaa.product.repository.StoreRepository;
 import com.example.aaa.shoppingCart.entity.CartProducts;
@@ -38,9 +34,6 @@ import com.example.aaa.users.entity.Users;
 import com.example.aaa.users.repository.UsersRepository;
 import com.example.aaa.users.service.UsersDetails;
 
-
-  
-
 @Controller
 public class BankController {
 	@Autowired
@@ -49,10 +42,6 @@ public class BankController {
 	CreditCardRepository ccRepository;
 	@Autowired
 	CardBrendRepository cbRepository;
-	@Autowired
-	MonthRepository monthRepository;
-	@Autowired
-	YearRepository yearRepository;
 	@Autowired
 	ShoppingCartRepository scRepository;
 	@Autowired
@@ -65,8 +54,7 @@ public class BankController {
 	@Autowired
 	private JavaMailSender sender;
 	
-	
-	@GetMapping("/payment/{id}")
+    @GetMapping("/payment/{id}")
 	public String paymentForm(Model model,@AuthenticationPrincipal UsersDetails userD, @PathVariable("id")Integer id,@Param(value = "cardNumber") String cardNumber) {
 		
 		List<CardBrend> cardBrend = cbRepository.findAll();
@@ -74,24 +62,19 @@ public class BankController {
 		ShoppingCart cart = scRepository.findById(id).get();
 	    Users user = userRepository.findById(id).get();
 	    List<CartProducts> products = cart.getProducts();
-	    List<Month>months = monthRepository.findAll();
-	    List<Year> years = yearRepository.findAll();
 		 model.addAttribute("card", card);
 		 model.addAttribute("cardBrend", cardBrend);
 		 model.addAttribute("cart", cart);
 		 model.addAttribute("user", user);
 		 model.addAttribute("products", products);
-		 model.addAttribute("months", months);
-		 model.addAttribute("years", years);
 		
 		      return "paymentForm";
 		}
 	
 	@PostMapping("/payment/{id}")
-	@Transactional(readOnly = true)
 	public String completePayment(@PathVariable("id") Integer id, @Param(value = "cardNumber")
 	String cardNumber,@Param(value = "cardholderName") String cardholderName, @Param(value = "cvv")
-	String cvv, @Param(value="month")Month month,@Param(value="year")Year year , Model model, Errors errors)   {
+	String cvv, @Param(value="month")Month month,@Param(value="year")Year year , Model model)   {
 		
 		 Company company = companyRepository.findByAccountNumber("0123456789");
 		 ShoppingCart cart1 = scRepository.findById(id).get();
@@ -114,8 +97,9 @@ public class BankController {
 		       if(card.getBalance()< cart1.getTotal()) {
 			         return"redirect:/payment/"+ cart1.getId()+"?errorBalance";
 			   }
-			   card.setBalance(card.getBalance()-cart1.getTotal());
-			   company.setAccountBalance(company.getAccountBalance() + cart1.getTotal());
+		       Double orderTotal = cart1.getTotal()+cart1.getOption().getPrice();
+			   card.setBalance(card.getBalance()-orderTotal);
+			   company.setAccountBalance(company.getAccountBalance() + orderTotal);
 			     companyRepository.save(company);
 			     ccRepository.save(card);
 			
@@ -128,7 +112,7 @@ public class BankController {
 			   }
 			
 		 String email = card.getContact();
-		 Double amount = cart1.getTotal();
+		 Double amount = orderTotal;
 			
 			try {
 				
@@ -138,12 +122,11 @@ public class BankController {
 				model.addAttribute("error", ex.getMessage());
 				model.addAttribute("error", "Something bad happened while sending the email.");
 			}
-			      //   payToStoresAutomatic();
+			         payToStoresAutomatic(model);
 			         return "redirect:/newOrder";
 			
 			}else {
 			         return"redirect:/payment/"+ cart1.getId()+"?errorNumber";
-		
 		}
         	
 	}
@@ -157,7 +140,7 @@ public class BankController {
 		  helper.setTo(email);
 		
 		String subject = "Payment ";
-		String content =  "Payment has been made from one of your Credit card with number  " + cc.getCardNumber()+ 
+		String content =  "Payment has been made from one of your " + cc.getBrend().getBrend() + "'s ending with " + cc.getCardNumber().substring(12) + 
 				". The amount that was payed  was  " + amount +"$" + ". The new balance on your card now is: "+ cc.getBalance() + "$" ;
 		
 		  helper.setSubject(subject);
@@ -166,10 +149,10 @@ public class BankController {
 		 
 		}
 	
-	 public void payToStoresAutomatic() {
+	public void payToStoresAutomatic(Model model) {
 		Payment payment = new Payment();
 		List<Store> stores = storeRepository.findAll();
-		for (Store store : stores) {
+		  for (Store store : stores) {
 			 if (store.getBalance() > 20000.00 ) {
 			   Company company = companyRepository.findByAccountNumber(store.getAccountNumber());
 				 company.setAccountBalance(company.getAccountBalance() + store.getBalance());
@@ -179,36 +162,71 @@ public class BankController {
 				 payment.setCompany(company);
 				 payment.setSum(store.getBalance());
 				 payment.setLocalDateTime(LocalDateTime.now());
+				 
 				   paymentRepository.save(payment);
 				   companyRepository.save(company);
 				   companyRepository.save(comp);
-				 store.setBalance(0.00);
+				   
+				String email = payment.getCompany().getEmail();
+				Double amount = payment.getSum();
+			    LocalDateTime time = payment.getLocalDateTime();
+				Double balance = payment.getCompany().getAccountBalance();  
+				
+				try {
+					sendAutomaticPaymentConfirmationToStore(email, amount, time, balance);
+				} catch (UnsupportedEncodingException | MessagingException ex) {
+					model.addAttribute("error", ex.getMessage());
+					model.addAttribute("error", "Something bad happened while sending the email.");
+				}
+				
+				String email2 = comp.getEmail();
+				Double balance2 = comp.getAccountBalance();
+				
+				try {
+					sendAutomaticPaymentConfirmationToAdmin(email2, payment, balance2);
+				} catch (UnsupportedEncodingException | MessagingException ex) {
+					model.addAttribute("error", ex.getMessage());
+					model.addAttribute("error", "Something bad happened while sending the email.");
+				}
+				   store.setBalance(0.00);
 				   storeRepository.save(store);
 
 			}
 		}
 	}
-	 
-	 @GetMapping("/pay/{id}")
-	 public String payToStoresManually(@PathVariable("id")Integer id) {
-		 Payment payment = new Payment();
-		 Company comp = companyRepository.findByAccountNumber("0123456789");
-		 Store store = storeRepository.findById(id).get();
-		 Company company = companyRepository.findByAccountNumber(store.getAccountNumber());
-		   company.setAccountBalance(company.getAccountBalance() + store.getBalance());
-		   comp.setAccountBalance(comp.getAccountBalance() - store.getBalance());
-		 
-		     payment.setCompany(company);
-			 payment.setSum(store.getBalance());
-			 payment.setLocalDateTime(LocalDateTime.now());
-			 paymentRepository.save(payment);
-		   store.setBalance(0.00);
-		         companyRepository.save(company);
-		         companyRepository.save(comp);
-		         storeRepository.save(store);
-		 
-		           return "redirect:/administration";
-		 
-	 }
+	
+     private void sendAutomaticPaymentConfirmationToStore(String email, Double amount,LocalDateTime time, Double balance) throws UnsupportedEncodingException, MessagingException {
+		
+		MimeMessage message = sender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+		
+		  helper.setFrom("Geca@geca.com", "Java imitacija");
+		  helper.setTo(email);
+		
+		  String subject = "Payment ";
+		  String content =  "You have received a Payment from Dzikle's Express !!! on " + time + 
+					" . The amount that was payed  was  " + amount +"$" + ". The new balance on your account now is: "+ balance + "$" ;
+		
+		  helper.setSubject(subject);
+		  helper.setText(content, true);
+		 sender.send(message);
+     }
+     
+     private void sendAutomaticPaymentConfirmationToAdmin(String email, Payment payment, Double balance) throws UnsupportedEncodingException, MessagingException {
+ 		
+ 		MimeMessage message = sender.createMimeMessage();
+ 		MimeMessageHelper helper = new MimeMessageHelper(message);
+ 		
+ 		  helper.setFrom("Geca@geca.com", "Java imitacija");
+ 		  helper.setTo(email);
+ 		
+ 		String subject = "Payment was made to "+payment.getCompany().getCompanyName();
+ 		String content =  "On " + payment.getLocalDateTime() + 
+ 					" . a payment of " + payment.getSum() +"$" + " was made to " + payment.getCompany().getCompanyName() + " , and the new balance in your account is "+ balance + "$" ;
+ 		
+ 		  helper.setSubject(subject);
+ 		  helper.setText(content, true);
+ 		 sender.send(message);
+      }
 	
 	}
