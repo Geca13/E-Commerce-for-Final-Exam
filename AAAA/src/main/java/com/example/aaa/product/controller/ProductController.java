@@ -1,7 +1,6 @@
 package com.example.aaa.product.controller;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,33 +37,25 @@ import com.example.aaa.users.service.UsersDetails;
 
 @Controller
 public class ProductController {
+	
 	@Autowired
 	AddressRepository addressRepository;
-	
 	@Autowired
 	UsersRepository userRepository;
-	
 	@Autowired
 	ShoppingCartRepository cartRepository;
-	
 	@Autowired
 	ProductRepository productRepository;
-	
 	@Autowired
 	ProductServiceImpl productServiceImpl;
-	
 	@Autowired
 	CategoryRepository categoryRepository;
-	
 	@Autowired
 	ManufacturerRepository manufacturerRepository;
-	
 	@Autowired
 	CommentRepository commentRepository;
-	
 	@Autowired
 	StoreRepository storeRepository;
-	
 	@Autowired
 	CountryRepository countryRepository;
 	
@@ -125,7 +116,6 @@ public class ProductController {
 		  model.addAttribute("manufacturers", manufacturers);
 		  model.addAttribute("countries", countries);
 		  
-		
 		       return "add_manufacturer";
 	}
 	
@@ -143,9 +133,18 @@ public class ProductController {
         Users user = userRepository.findByEmail(userEmail);
            model.addAttribute("user", user);
         
-         List<Product> last10= productRepository.findAll();
-     //   List<Product> last10 = all.subList(all.size()-8,all.size());
-           model.addAttribute("last10", last10);
+           List<Product> all= productRepository.findAll();
+	         List<Product> last10 = all.subList(all.size()-8,all.size());
+	           model.addAttribute("last10", last10);
+           
+         List<Category> categories = categoryRepository.findAll();
+           model.addAttribute("categories", categories);
+           Integer category = categories.size();
+            model.addAttribute("category", category);
+        
+         List<Store> stores = storeRepository.findAll();
+           model.addAttribute("stores", stores);
+          
                return "index";
     }
 	
@@ -187,8 +186,7 @@ public class ProductController {
 			@Param("cid")Integer cid,
 			@Param("sid")Integer sid) {
 		
-		
-		  gridDetails(model,  1,search,pid,mid,cid,sid);
+		 gridDetails(model,  1,search,pid,mid,cid,sid);
 		
 		       return "productGrid";
 	}
@@ -201,8 +199,6 @@ public class ProductController {
 			@Param("cid")Integer cid,
 			@Param("sid")Integer sid) {
 		
-        
-        List<Product> listProducts = new ArrayList<>();
         List<Category> categories = categoryRepository.findAll();
         List<Manufacturer> brends = manufacturerRepository.findAll();
         List<Country> countries = countryRepository.findAll();
@@ -212,16 +208,9 @@ public class ProductController {
 	    
 	    Page<Product>pag = productServiceImpl.grid(pagNum, pageSize,search,pid,mid,cid,sid);
 	    
-	    List<Product> listProductss = pag.getContent();
-	    
-	    for (Product product2 : listProductss) {
-	    	if(product2.getAvailableQty()> 0) {
-	    		
-	   		listProducts.add(product2);
-	     	}
-	     }
-	 
-		  model.addAttribute("listProducts", listProducts);
+	    List<Product> listProducts = pag.getContent();
+	  
+	      model.addAttribute("listProducts", listProducts);
 	   	  model.addAttribute("currentPage",pagNum);
 		  model.addAttribute("totalPages", pag.getTotalPages());
 		  model.addAttribute("totalItems", pag.getTotalElements());
@@ -269,20 +258,16 @@ public class ProductController {
 			  
 			  productServiceImpl.update(product1);
 			
-			
-			  
-		      return "redirect:/";
+			   return "redirect:/";
 	}
 		
-	   @GetMapping("/products/productDetails/{id}")
-	   public String profileDetailsComments(@PathVariable("id")Integer id, Model model) {
-		    Product product = productRepository.findById(id).get();
-			
-	          profileDetails(id, model,1 );
-			
-			    return "productDetails";
+    @GetMapping("/products/productDetails/{id}")
+	public String profileDetailsComments(@PathVariable("id")Integer id, Model model) {
+		   
+    	Product product = productRepository.findById(id).get();
+		   profileDetails(id, model,1 );
+			   return "productDetails";
 	}
-		
 		
 	@GetMapping("/products/productDetails/{id}/pg/{pagNo}")
 	public String profileDetails(@PathVariable("id")Integer id, Model model,@PathVariable("pagNo") Integer pagNo) {
@@ -296,40 +281,40 @@ public class ProductController {
 		    model.addAttribute("comment1", comment1);
 			model.addAttribute("product", product);
 			model.addAttribute("comment", comment);
-			
 			model.addAttribute("currentPage",pagNo);
 			model.addAttribute("totalPages", pg.getTotalPages());
 			model.addAttribute("totalItems", pg.getTotalElements());
 			    return "productDetails";
 	}
 		
-		@PostMapping("/addComment/{id}")
-		public String postComment(@PathVariable("id")Integer id,@AuthenticationPrincipal UsersDetails userD, @ModelAttribute("comment")Comment comment) {
-			Product product = productRepository.findById(id).get();
-			String userEmail = userD.getUsername();
-	        Users user = userRepository.findByEmail(userEmail);
-	        Comment comment1 = new Comment();
+	@PostMapping("/addComment/{id}")
+	public String postComment(@PathVariable("id")Integer id,@AuthenticationPrincipal UsersDetails userD, @ModelAttribute("comment")Comment comment) {
+		Product product = productRepository.findById(id).get();
+		String userEmail = userD.getUsername();
+	    Users user = userRepository.findByEmail(userEmail);
+	    Comment comment1 = new Comment();
 	        comment1.setProduct(product);
 	        comment1.setUser(user);
 	        comment1.setUserComment(comment.getUserComment());
 	        comment1.setTime(LocalDateTime.now());
-	          if(comment.getUserComment().isEmpty())
-	        return "redirect:/products/productDetails/"+product.getId()+"?emptyPost";
-	          commentRepository.save(comment1);
+	          if(comment.getUserComment().isEmpty()) {
+	             return "redirect:/products/productDetails/"+product.getId()+"?emptyPost";
+	          }
+	           commentRepository.save(comment1);
 	        
-	        return "redirect:/products/productDetails/"+product.getId()+"?post";
-		}
+	             return "redirect:/products/productDetails/"+product.getId()+"?post";
+		}     
 		
-		@GetMapping("/deleteProduct/{id}")
-		public String deleteProduct(@PathVariable("id")Integer id) {
+	@GetMapping("/deleteProduct/{id}")
+	public String deleteProduct(@PathVariable("id")Integer id) {
 			
-			Product product = productRepository.findById(id).get();
+		Product product = productRepository.findById(id).get();
 			product.setCategory(null);
 			product.setManufacturer(null);
 			product.setStore(null);
 			product.setCountry(null);
 			productRepository.save(product);
-			List<Comment> comments = commentRepository.findAll();
+		List<Comment> comments = commentRepository.findAll();
 			for (Comment comment : comments) {
 				if( comment.getProduct()== product) {
 					commentRepository.delete(comment);
@@ -338,5 +323,5 @@ public class ProductController {
 			   productRepository.deleteById(id);
 			 return "redirect:/product";
 		
-		}				
-        }
+		}		
+	}
