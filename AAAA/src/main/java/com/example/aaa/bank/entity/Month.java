@@ -1,26 +1,28 @@
 package com.example.aaa.bank.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Entity
-@Table
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Month {
+public enum Month {
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	JANUARY("January"),
+	FEBRUARY("February"),
+	MARCH("March"),
+	APRIL("April"),
+	MAY("May"),
+	JUNE("June"),
+	JULY("July"),
+	AUGUST("August"),
+	SEPTEMBER("September"),
+	OCTOMBER("Octomber"),
+	NOVEMBER("November"),
+	DECEMBER("December");
 	
-	private String month;
+	 private final String displayValue;
+    
+    private Month(String displayValue) {
+        this.displayValue = displayValue;
+    }
+    
+    public String getDisplayValue() {
+        return displayValue;
+    }
 
 }
