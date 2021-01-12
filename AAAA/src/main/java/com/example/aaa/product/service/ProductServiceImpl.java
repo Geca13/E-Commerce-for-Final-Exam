@@ -30,19 +30,14 @@ public class ProductServiceImpl  {
 	
 	@Autowired
 	ProductRepository productRepository;
-	
 	@Autowired
 	ManufacturerRepository manufacturerRepository;
-	
 	@Autowired
 	CategoryRepository categoryRepository;
-	
 	@Autowired
 	CommentRepository commentRepository;
-	
 	@Autowired
 	CountryRepository countryRepository;
-	
 	@Autowired
 	StoreRepository storeRepository;
 
@@ -55,6 +50,8 @@ public class ProductServiceImpl  {
 		
 		          return productRepository.findAll(pageable);
 	}
+	
+	
 	
      public Page<Product> grid(Integer pageNumber, Integer pageSize,String search, Integer pid, Integer mid,Integer cid,Integer sid) {
 		
@@ -70,7 +67,7 @@ public class ProductServiceImpl  {
 			}else if(sid != null ) {
 			      return	productRepository.findAllProductByStoreId(sid, pageable);
 			}
-		          return productRepository.findAll(pageable);
+		          return productRepository.findAllProductByAvailableQty(pageable);
 	
 	}
 	
@@ -87,6 +84,7 @@ public class ProductServiceImpl  {
 					
 					e.printStackTrace();
 				}
+		        
 		        
 		        
 		        if(storeRepository.existsByStoreName(product.getStore().getStoreName())) {
@@ -181,5 +179,5 @@ public class ProductServiceImpl  {
         	manufacturerRepository.save(manufacturer);
         	
         }
-
+        
 }
