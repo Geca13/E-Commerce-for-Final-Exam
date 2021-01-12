@@ -1,20 +1,11 @@
 package com.example.aaa.bank.entity;
 
-import java.util.List;
-
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.ManyToAny;
-
-import com.example.aaa.shoppingCart.entity.Order;
-import com.example.aaa.shoppingCart.entity.ShoppingCart;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,8 +17,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreditCard {
 	
-	
-
 	@Id
 	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -35,21 +24,21 @@ public class CreditCard {
 	private String cardholderName;
 	
 	@ManyToOne
+	@JoinColumn(referencedColumnName = "id")
 	private CardBrend brend;
 	
 	private String cardNumber;
 	
-    private String month;
+	@Enumerated
+    private Month month;
 	
-    private String year;
+	@Enumerated
+    private Year year;
     
     private String cvv;
     
     private Double balance;
     
     private String contact;
-    
- 
-    
-    
+     
 }
