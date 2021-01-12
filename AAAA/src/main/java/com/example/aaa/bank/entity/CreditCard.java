@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class CreditCard {
 	
 	@Id
-	//@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	private String cardholderName;
@@ -30,15 +30,15 @@ public class CreditCard {
 	private String cardNumber;
 	
 	@Enumerated
-    private Month month;
+        private Month month;
 	
 	@Enumerated
-    private Year year;
+        private Year year;
     
-    private String cvv;
+        private String cvv;
     
-    private Double balance;
+        private Double balance;
     
-    private String contact;
+        private String contact;
      
 }
