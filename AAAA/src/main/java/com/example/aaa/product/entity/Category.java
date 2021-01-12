@@ -1,9 +1,11 @@
 package com.example.aaa.product.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,5 +23,9 @@ public class Category {
 	private Integer id;
 	
 	private String productCategory;
+	
+	@Lob
+	@Column
+	private String image;
 
 }
