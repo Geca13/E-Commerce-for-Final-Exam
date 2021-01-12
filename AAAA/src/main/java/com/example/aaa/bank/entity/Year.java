@@ -1,26 +1,27 @@
 package com.example.aaa.bank.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Entity
-@Table
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Year {
+public enum Year {
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	PRVA("2021"),
+	VTORA("2022"),
+	TRETA("2023"),
+	CHETVRTA("2024"),
+	PETTA("2025"),
+	SHESTA("2026"),
+	SEDMA("2027"),
+	OSMA("2028"),
+	DEVETA("2029"),
+	DESETA("2030");
 	
-	private String year;
-
+	
+	private final String displayValue;
+    
+    private Year(String displayValue) {
+        this.displayValue = displayValue;
+    }
+    
+    public String getDisplayValue() {
+        return displayValue;
+    }
+	
 }
