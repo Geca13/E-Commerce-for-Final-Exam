@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
@@ -16,33 +14,53 @@
 
 <body>
 
-<nav class="navbar navbar-dark bg-dark">
-  <a class="navbar-brand" ><span sec:authentication="principal.username">User</span></a>
-  <a class="navbar-brand" ><span sec:authentication="principal.authorities">User</span></a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-    <div class="navbar-nav">
-    <a class="nav-item nav-link" 
-         th:href="@{/profile}"
-                    sec:authentication="principal.username"
-    > Welcome <span >User</span></a>
-    
-   
-      <a th:href="@{/profile/cart}" class="nav-item nav-link" > My Shopping Cart</a>
-      <a th:href="@{/products}" class="nav-item nav-link" >Products</a>
-      <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-item nav-link" >Logout</a>
-      
-    </div>
-  </div>
-</nav>
+<nav class="navbar navbar-expand-lg navbar-light bg-warning">
+        <a class="navbar-brand" href="#">DZIKLE'S EXPRESS</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto topnav">
+            <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Me
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="navbar-brand" ><span sec:authentication="principal.authorities">User</span></a>
+                        <div class="dropdown-divider"></div>
+                        <a class="nav-item nav-link"  th:href="@{/profile}" sec:authentication="principal.username"> Welcome <span >User</span></a>
+                        <div class="dropdown-divider"></div>
+                        <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-item nav-link" >Logout</a>
+                    </div>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="#" th:href="@{/}">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/products}" class="nav-item nav-link" >Products</a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/profile/cart}" class="nav-item nav-link" > My Shopping Cart</a>
+                </li>
+                <li class="nav-item">
+                <div sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a th:href="@{/administration}" class="nav-item nav-link" > Administration</a>
+               </div>
+                </li>
+                
+               </ul>
+        </div>
+ </nav>
 
 <div class="container">
+<div th:if="${messageAddress != null}">
+     <div class="alert alert-info">[[${messageAddress}]]</div>
+    </div>
 
   <h1>Shipping options</h1>
 
- <form action="#" th:action="@{/confirmAndPay/{id}(id=${cart.id})}" th:object="${cart}"class="form-horizontal" method="post">
+ <form action="#" th:action="@{/confirmAndPay}" th:object="${cart}"class="form-horizontal" method="post">
       
     <div class="form-group has-feedback">
       <div class="form-group">
@@ -57,7 +75,7 @@
     
   <div class="form-group">
     <label for="exampleFormControlSelect2">Select Shipping Address</label>
-    <select class="form-control" th:field="*{address.id}"  id="exampleFormControlSelect2">
+    <select class="form-control" th:field="*{address.id}"  id="exampleFormControlSelect2" required>
     
       <option th:each="adr : ${listaddress}"
       
@@ -68,7 +86,7 @@
    <br/><br/>
    <div class="form-group">
     <label for="exampleFormControlSelect2">Select Shipping Option</label>
-    <select class="form-control" th:field="*{option}"  id="exampleFormControlSelect2">
+    <select class="form-control" th:field="*{option}"  id="exampleFormControlSelect2"required>
     
       <option th:each="adr : ${options}"
       
@@ -86,13 +104,20 @@
        <br/>
      <button class="btn btn-primary" type="submit">NEXT STEP</button>
   </form>
-  
-  
-  
-  
-  
-  
-  
+  <div class="foot">
+   <div class="container">
+     <div class="row">
+       <div class="col-sm">
+         </div>
+           <div class="col-sm">
+             <h3>Gzikle's Shop powered by Marjan Geca Karafiloski . All right reserved 2020/2021</h3>
+           </div>
+          <div class="col-sm">
+         </div>
+        </div>
+      </div>
+      <br>
+    </div>
   
   <br>
   <a th:href="@{/}" class="nav-item nav-link" >Continue shopping...</a>
