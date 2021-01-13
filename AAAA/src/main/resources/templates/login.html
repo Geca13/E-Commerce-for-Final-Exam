@@ -13,6 +13,14 @@
       background-color: gray;
       padding-top: 50px;
     }
+    #containerIntro h3,
+#containerIntro p {
+    display: inline;
+    vertical-align: top;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    line-height: 28px;
+}
     </style>
 </head>
 
@@ -174,8 +182,11 @@
  
  
  <hr>
+ <div class="row containerIntro">
  
- <h3>Browse by Categories</h3>
+ <h3>Browse by Categories </h3><p class="card-title" th:text = "${category}"></p>
+ 
+ </div>
  
  <form th:action="@{/products}">
  <div class="row">
@@ -205,7 +216,7 @@
     <img th:src="*{'data:image/png;base64,'+{store.image}}" style="width:220px" >
      <div class="card-body">
       <p class="card-title" th:text = "${store.storeName}"></p>
-      <p class="card-title"  th:text = "${byStores}"></p>
+      
       <div class="col-auto my-1">
      <button type="submit" name="sid" th:value="${store.id}" class="btn btn-primary">See Products</button>
     </div>
