@@ -9,10 +9,11 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
     integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
   <style>
-  
     </style>
 </head>
+
 <body>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-warning">
         <a class="navbar-brand" href="#">DZIKLE'S EXPRESS</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,88 +22,127 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto topnav">
-            
+            <li class="nav-item dropdown ">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Me
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="navbar-brand" ><span sec:authentication="principal.authorities">User</span></a>
+                        <div class="dropdown-divider"></div>
+                        <a class="nav-item nav-link"  th:href="@{/profile}" sec:authentication="principal.username"> Welcome <span >User</span></a>
+                        <div class="dropdown-divider"></div>
+                        <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-item nav-link" >Logout</a>
+                    </div>
+                </li>
                 <li class="nav-item ">
                     <a class="nav-link" href="#" th:href="@{/}">Home <span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item active">
                     <a th:href="@{/products}" class="nav-item nav-link" >Products</a>
                 </li>
-                
+                <li class="nav-item">
+                    <a th:href="@{/profile/cart}" class="nav-item nav-link" > My Shopping Cart</a>
+                </li>
+                <li class="nav-item">
+                <div sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a th:href="@{/administration}" class="nav-item nav-link" > Administration</a>
+               </div>
+                </li>
                 
                </ul>
         </div>
  </nav>
 
+<div class="container">
+
+ <h1>Update Product</h1>
  <br>
- <br>
+  
+  <form action="#" th:action="@{/showUpdateProductForm/{id}(id=${product.id})}" th:object="${product}" method="post" enctype="multipart/form-data">
+  
+  
+  
+   <div class="form-group">
+    <label for="exampleFormControlSelect2">Select Store</label>
+    <select class="form-control" th:field="*{store.storeName}"  id="exampleFormControlSelect2" required>
+    
+      <option th:each="store : ${stores}"
+      
+      th:value="${store.storeName}"
+            th:text="${store.storeName }"/>
+       </select>
+   </div>
+    
+    <div class="form-group">
+    <label for="exampleFormControlSelect2">Select Category</label>
+    <select class="form-control" th:field="*{category.productCategory}"  id="exampleFormControlSelect2"required>
+    
+      <option th:each="category : ${categories}"
+      
+      th:value="${category.productCategory}"
+            th:text="${category.productCategory}"/>
+       </select>
+   </div>
+  
  
- <div class="container">
-
-  <div class="row">
-   <div class="col-md-6 col-md-offset-3">
-
-    <div th:if="${param.success}">
-     <div class="alert alert-info">You've successfully registered !!!</div>
-    </div>
-    
-    <div th:if="${error != null}">
-     <div class="alert alert-info">[[${error}]]</div>
-    </div>
-    
-        <h1>Registration</h1>
-   
-    <form th:action="@{/signUpForm}" th:object="${user}" method="post">
-    
-    <h2>Login Informantion</h2>
-  <div class="form-group row">
-    <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
-    <div class="col-sm-10">
-      <input type="email" th:field="*{email}" required autofocus="autofocus" class="form-control" id="inputEmail3" placeholder="Email">
-    </div>
-  </div>
-  <div class="form-group row">
-    <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
-    <div class="col-sm-10">
-      <input type="password" th:field="*{password}" required autofocus="autofocus" class="form-control" id="inputPassword3" placeholder="Password">
-  <p> <small>Password must be from 6-16 characters and must contain at least : 1 number, 1 Big ,1 Small letter and special character(@,#,$,%) </small> </p>
-    </div>
-   
-  </div>
-  <h3>Personal Information</h3>
-  <div class="form-group row">
-    <label for="inputFirstName" class="col-sm-2 col-form-label">First Name</label>
-    <div class="col-sm-10">
-      <input type="text" th:field="*{firstName}" required autofocus="autofocus" class="form-control" id="inputFirstName" placeholder="First Name">
-    </div>
-  </div>
-  
-  <div class="form-group row">
-    <label for="inputLastName" class="col-sm-2 col-form-label">Last Name</label>
-    <div class="col-sm-10">
-      <input type="text" th:field="*{lastName}" required autofocus="autofocus" class="form-control" id="inputLastName" placeholder="Last name">
-    </div>
-  </div>
-  
-  <div class="form-group row">
-    <label for="inputAge" class="col-sm-2 col-form-label">Age</label>
-    <div class="col-sm-10">
-      <input type="text" th:field="*{age}" required autofocus="autofocus" class="form-control" id="inputAge" placeholder="Age">
-    </div>
-  </div>
  <div class="form-group">
-      <button type="submit" class="btn btn-success">Register</button>
-      <span>Already registered? <a href="/" th:href="@{/login}">Login
-        here</a></span>
+    <label for="exampleFormControlSelect2">Select Product Origin</label>
+    <select class="form-control" th:field="*{country.countryName}"  id="exampleFormControlSelect2" required>
+    
+      <option th:each="country : ${countries}"
+      
+      th:value="${country.countryName}"
+            th:text="${country.countryName}"/>
+       </select>
+   </div>
+  
+  <div class="form-group row">
+    <label for="inputProductName" class="col-sm-2 col-form-label">Product Name</label>
+    <div class="col-sm-10">
+      <input type="text" th:field="*{productName}" class="form-control" id="inputProductName" required>
     </div>
-   <br>
+  </div>
+  
+  <div class="form-group row">
+    <label for="inputProductProce" class="col-sm-2 col-form-label">Product Price</label>
+    <div class="col-sm-10">
+      <input type="text" th:field="*{productPrice}" class="form-control" id="inputProductPrice" required>
+    </div>
+  </div>
+  
+  <div class="form-group row">
+    <label for="inputQty" class="col-sm-2 col-form-label">Enter Available Quantity</label>
+    <div class="col-sm-10">
+      <input type="text" th:field="*{availableQty}" class="form-control" id="inputQty" required>
+    </div>
+  </div>
+  
+  <div class="form-group row">
+    <label for="inputKeyword" class="col-sm-2 col-form-label">Keyword</label>
+    <div class="col-sm-10">
+      <input type="text" th:field="*{keyword}" class="form-control" id="inputKeyword" required>
+    </div>
+  </div>
+  
+  <div class="form-group row">
+    <label for="inputManufacturerName" class="col-sm-2 col-form-label">Manufacturer</label>
+    <div class="col-sm-10">
+      <input type="text" th:field="*{manufacturer.manufacturerName}" class="form-control" id="inputManufacturerName" required>
+    </div>
+  </div>
+  
  
+  
+ <button type="submit" class="btn btn-info col-2">Save Product</button>
+  
   </form>
- </div>
- 
- </div>
- 
- </div>
+  
+  <br>
+  <a th:href="@{/products/productDetails/{id}(id=${product.id})}" class="nav-item nav-link" >BACK TO PRODUCT DETAILS</a>
+  
+</div>
+
+
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
     integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
   </script>
