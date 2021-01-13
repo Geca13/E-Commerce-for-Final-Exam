@@ -170,7 +170,6 @@ public class ShoppingCartController {
         product.setItemTotal(product.getItemTotal()-product.getProduct().getProductPrice());
         cartPrRepository.save(product);
         
-        
         cart.setTotal(cart.getTotal() - product.getProduct().getProductPrice());
       
        cartRepository.save(cart);
