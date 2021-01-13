@@ -14,40 +14,51 @@
 
 <body>
 
-<nav class="navbar navbar-dark bg-dark">
-  <a class="navbar-brand" ><span sec:authentication="principal.username">User</span></a>
-  <a class="navbar-brand" ><span sec:authentication="principal.authorities">User</span></a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-    <div class="navbar-nav">
-    <a class="nav-item nav-link" 
-         th:href="@{/profile}"
-                    sec:authentication="principal.username"
-    > Welcome <span >User</span></a>
-    
-   
-      <a th:href="@{/profile/cart}" class="nav-item nav-link" > My Shopping Cart</a>
-      <a th:href="@{/products}" class="nav-item nav-link" >Products</a>
-      <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-item nav-link" >Logout</a>
-      
-    </div>
-  </div>
-</nav>
+<nav class="navbar navbar-expand-lg navbar-light bg-warning">
+        <a class="navbar-brand" href="#">DZIKLE'S EXPRESS</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto topnav">
+            <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Me
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="navbar-brand" ><span sec:authentication="principal.authorities">User</span></a>
+                        <div class="dropdown-divider"></div>
+                        <a class="nav-item nav-link"  th:href="@{/profile}" sec:authentication="principal.username"> Welcome <span >User</span></a>
+                        <div class="dropdown-divider"></div>
+                        <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-item nav-link" >Logout</a>
+                    </div>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="#" th:href="@{/}">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/products}" class="nav-item nav-link" >Products</a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/profile/cart}" class="nav-item nav-link" > My Shopping Cart</a>
+                </li>
+                <li class="nav-item">
+                <div sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a th:href="@{/administration}" class="nav-item nav-link" > Administration</a>
+               </div>
+                </li>
+                
+               </ul>
+        </div>
+ </nav>
 
 <div class="container">
-
-
 <br>
 <div class="row">
-
-  <div class="col-sm-7"> 
-  
-  
+ <div class="col-sm-7"> 
   <form action="#" th:action="@{/payment/{id}(id=${cart.id})}" th:object="${card}" method="post" enctype="multipart/form-data">
-  
-  <div th:if="${param.errorNumber}">
+ <div th:if="${param.errorNumber}">
      <div class="alert alert-danger">The card number is invalid , please check the card and try again </div>
     </div>
     
@@ -80,11 +91,11 @@
       <div class="form-row">
     <div class="form-group col-md-6">
       <label for="inputEmail4">Card Number</label>
-      <input type="text" th:name="cardNumber" class="form-control" id="inputEmail4" placeholder="1234123412341234">
+      <input type="text" th:name="cardNumber" class="form-control" id="inputEmail4" placeholder="1234123412341234"required>
     </div>
     <div class="form-group col-md-6">
       <label for="inputPassword4">Cardholder Name</label>
-      <input type="text" th:name="cardholderName" class="form-control" id="inputPassword4" placeholder="Marjan Karafiloski">
+      <input type="text" th:name="cardholderName" class="form-control" id="inputPassword4" placeholder="Marjan Karafiloski"required>
     </div>
   </div>
   
@@ -92,61 +103,39 @@
     
     <div class="form-group col-md-2">
       <label for="inputZip">CVV</label>
-      <input type="text" th:name="cvv" class="form-control" id="inputZip" placeholder="123">
+      <input type="text" th:name="cvv" class="form-control" id="inputZip" placeholder="123"required>
     </div>
     
     <div class="form-group col-md-4">
-      <label for="exampleFormControlSelect2">Exp Month</label>
-    <select  th:name="month"  class="custom-select mr-sm-2" id="inlineFormCustomSelect">
-        
-    <option value="January">January</option>
-    <option value="February">February</option>
-    <option value="March">March</option>
-    <option value="April">April</option>
-    <option value="May">May</option>
-    <option value="June">June</option>
-    <option value="July">July</option>
-    <option value="August">August</option>
-    <option value="September">September</option>
-    <option value="October">October</option>
-    <option value="November">November</option>
-    <option value="December">December</option>
+      <label for="exampleFormControlSelect2">Select Exp. Month</label>
+    <select class="form-control" th:name="month"  id="exampleFormControlSelect2"required>
     
-      </select>
+      <option th:each="month : ${T(com.example.aaa.bank.entity.Month).values()}"
+      
+      th:value="${month}"
+            th:text="${month.displayValue}"/>
+       </select>
     </div>
     
     <div class="form-group col-md-4">
-      <label for="exampleFormControlSelect2">Exp Year</label>
-    <select  th:name="year"  class="custom-select mr-sm-2" id="inlineFormCustomSelect">
-        
-    <option value="2021">2021</option>
-    <option value="2022">2022</option>
-    <option value="2023">2023</option>
-    <option value="2024">2024</option>
-    <option value="2025">2025</option>
-    <option value="2026">2026</option>
-    <option value="2027">2027</option>
-    <option value="2028">2028</option>
-    <option value="2029">2029</option>
-    <option value="2030">2030</option>
+      <label for="exampleFormControlSelect2">Select Exp. Year</label>
+    <select class="form-control" th:name="year"  id="exampleFormControlSelect2"required>
     
-      </select>
+      <option th:each="year : ${T(com.example.aaa.bank.entity.Year).values()}"
+      
+      th:value="${year}"
+            th:text="${year.displayValue}"/>
+       </select>
     </div>
     
   </div>
-
-  
- <button type="submit" class="btn btn-info col-2">Pay</button>
+<button type="submit" class="btn btn-info col-2">Pay</button>
   
   </form>
   </div>
   <div class="col-sm-5"><form action="#" th:action="@{/profile/cart}" th:object="${cart}"class="form-horizontal" method="post">
       <input type="hidden" name="id" th:value="*{id}" /> 
-   
-        
-       
-     
-      <h4>Your Products</h4>
+    <h4>Your Products</h4>
   <table class="table table-striped table-dark">
   <thead>
     <tr>
@@ -170,39 +159,42 @@
       <td th:text="${product.product.productPrice}"></td>
       <td th:text="${product.qty}"></td>
       <td th:text="${product.itemTotal}"></td>
-    
-      
-      
    </table>
-   
-        <br/>
-   
+   <br/>
    <table class="table table-striped"  >
-  
-      <tr>
+    <tr>
         <th>SUBTOTAL</th>
         <td><b th:text="${cart.total}"></b></td>
-      </tr>
-      
-       </table>
+    </tr>
+    </table>
         <br/>
   <table class="table table-striped"  >
-  
-      <tr>
+   <tr>
         <th>Shipping cost not included</th>
         <td><b th:text="${cart.option.transporter +' '+cart.option.days +' '+cart.option.price }"></b></td>
-      </tr>
+    </tr>
       
        </table>
   </form>
   <br>
   <a th:href="@{/}" class="nav-item nav-link" >Continue shopping...</a></div>
 </div>
-
-
-  <a th:href="@{/confirmAndPay/{id}(id=${cart.id})}" class="nav-item nav-link" >Back to shipping ...</a>
-  
-</div>
+   <a th:href="@{/confirmAndPay}" class="nav-item nav-link" >Back to shipping ...</a>
+ </div>
+<div class="foot">
+   <div class="container">
+     <div class="row">
+       <div class="col-sm">
+         </div>
+           <div class="col-sm">
+             <h3>Gzikle's Shop powered by Marjan Geca Karafiloski . All right reserved 2020/2021</h3>
+           </div>
+          <div class="col-sm">
+         </div>
+        </div>
+      </div>
+      <br>
+    </div>
 
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
