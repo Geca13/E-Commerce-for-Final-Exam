@@ -14,82 +14,147 @@
 
 <body>
 
-<nav class="navbar navbar-dark bg-dark">
-  <a class="navbar-brand" ><span sec:authentication="principal.username">User</span></a>
-  <a class="navbar-brand" ><span sec:authentication="principal.authorities">User</span></a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-    <div class="navbar-nav">
-    <a class="nav-item nav-link" 
-         th:href="@{/profile}"
-                    sec:authentication="principal.username"
-    > Welcome <span >User</span></a>
-    
-   
-      <a th:href="@{/products}" class="nav-item nav-link" >Grid view</a>
-      <a th:href="@{/product}" class="nav-item nav-link" >Table view</a>
-      <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-item nav-link" >Logout</a>
-      
-    </div>
-  </div>
-</nav>
+<nav class="navbar navbar-expand-lg navbar-light bg-warning">
+        <a class="navbar-brand" href="#">DZIKLE'S EXPRESS</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto topnav">
+            <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Me
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="navbar-brand" ><span sec:authentication="principal.authorities">User</span></a>
+                        <div class="dropdown-divider"></div>
+                        <a class="nav-item nav-link"  th:href="@{/profile}" sec:authentication="principal.username"> Welcome <span >User</span></a>
+                        <div class="dropdown-divider"></div>
+                        <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-item nav-link" >Logout</a>
+                    </div>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="#" th:href="@{/}">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/products}" class="nav-item nav-link" >Products</a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/profile/cart}" class="nav-item nav-link" > My Shopping Cart</a>
+                </li>
+                <li class="nav-item">
+                <div sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a th:href="@{/administration}" class="nav-item nav-link" > Administration</a>
+               </div>
+                </li>
+                
+               </ul>
+        </div>
+ </nav>
 
 <div class="container">
 <br>
 
-
  <h1>Create New Store</h1>
   
+  <div th:if="${error != null}">
+     <div class="alert alert-danger">[[${error}]]</div>
+    </div>
   <form action="#" th:action="@{/saveStore}" th:object="${store}" method="post" enctype="multipart/form-data">
   
   <div class="form-group row">
     <label for="inputProductName" class="col-sm-2 col-form-label">Store Name</label>
     <div class="col-sm-10">
-      <input type="text" th:field="*{storeName}" class="form-control" id="inputProductName">
+      <input type="text" th:field="*{storeName}" class="form-control" id="inputProductName"required>
     </div>
   </div>
   
   <div class="form-group row">
     <label for="inputProductProce" class="col-sm-2 col-form-label">Company Email</label>
     <div class="col-sm-10">
-      <input type="text" th:field="*{email}" class="form-control" id="inputProductPrice">
+      <input type="text" th:field="*{email}" class="form-control" id="inputProductPrice"required>
     </div>
   </div>
+  
+  <div class="form-group">
+    <label for="exampleFormControlSelect2">Select Bank</label>
+    <select class="form-control" th:field="*{bank.bankName}"  id="exampleFormControlSelect2" required>
+    
+      <option th:each="bank : ${banks}"
+      
+      th:value="${bank.bankName}"
+            th:text="${bank.bankName }"/>
+       </select>
+   </div>
   
   <div class="form-group row">
-    <label for="inputQty" class="col-sm-2 col-form-label">Bank</label>
+    <label for="inputKeyword" class="col-sm-2 col-form-label">Account Number</label>
     <div class="col-sm-10">
-      <input type="text" th:field="*{bank.bankName}" class="form-control" id="inputQty">
+      <input type="text" th:field="*{accountNumber}" class="form-control" id="inputKeyword"required>
     </div>
   </div>
   
-  <div class="form-group row">
-    <label for="inputKeyword" class="col-sm-2 col-form-label">Keyword</label>
-    <div class="col-sm-10">
-      <input type="text" th:field="*{accountNumber}" class="form-control" id="inputKeyword">
-    </div>
-  </div>
-  
-     
-  
-  <!--  
    <div class="form-group">
-    <label for="exampleFormControlFile1">Upload image:</label>
+    <label for="exampleFormControlFile1">Upload logo:</label>
     <input type="file" name="file" class="form-control-file" id="exampleFormControlFile1">
   </div>
-  -->
-               
-
   
- <button type="submit" class="btn btn-info col-2">Save Store</button>
+  <button type="submit" class="btn btn-info col-2">Save Store</button>
   
   </form>
   <br>
-      <a th:href="@{/products}" class="nav-item nav-link" >Go to Grid View</a>
+   <br>
+  <h3>Stores</h3>
+   <br>
+   <table class="table table-striped ">
+  <thead>
+    <tr>
+      <th scope="col">
+     <a th:href="@{'/pagess/' + ${currentPage} + '?sortField=storeId&sortDir=' + ${reverseSortDir}}">Id</a> 
+      </th>
+      <th scope="col">
+      <a th:href="@{'/pagess/' + ${currentPage} + '?sortField=productName&sortDir=' + ${reverseSortDir}}">Store </a>
+       </th>
+      <th scope="col">
+     <a th:href="@{'/pagess/' + ${currentPage} + '?sortField=storeId&sortDir=' + ${reverseSortDir}}">Email</a> 
+      </th>
+      <th scope="col">
+      <a th:href="@{'/pagess/' + ${currentPage} + '?sortField=productName&sortDir=' + ${reverseSortDir}}">Bank </a>
+       </th>
+       <th scope="col">
+      <a th:href="@{'/pagess/' + ${currentPage} + '?sortField=productName&sortDir=' + ${reverseSortDir}}">Account Number </a>
+       </th>
+        <th scope="col">
+      <a th:href="@{'/pagess/' + ${currentPage} + '?sortField=productName&sortDir=' + ${reverseSortDir}}">Balance </a>
+       </th>
+       <th scope="col"> 
+      <a th:href="@{'/pagess/' + ${currentPage} + '?sortField=image&sortDir=' + ${reverseSortDir}}"></a>
+       </th>
+        <th scope="col"> 
+      <a th:href="@{'/pagess/' + ${currentPage} + '?sortField=image&sortDir=' + ${reverseSortDir}}">Image</a>
+       </th>
+      </tr>
+  </thead>
+  <tbody>
+   
+    <tr th:each="store : ${stores}">
+   
+      <td th:text="${store.id}"></td>
+      <td th:text="${store.storeName}"></td>
+      <td th:text="${store.email}"></td>
+      <td th:text="${store.bank.bankName}"></td>
+      <td th:text="${store.accountNumber}"></td>
+      <td th:text="${store.balance}"></td>
+      <td ><a th:href="@{/pay/{id}(id=${store.id})}" class="btn btn-outline-primary">  Pay</a></td>
+      <td> <img th:src="*{'data:image/png;base64,'+{store.image}}" style="width:200px"></td> 
       
-      <a th:href="@{/product}" class="nav-item nav-link" >Go To Table View</a>
+    </tr>
+     </tbody>
+</table>
+  
+  <br>
+      <a th:href="@{/administration}" class="nav-item nav-link" >BACK</a>
   
 </div>
 
