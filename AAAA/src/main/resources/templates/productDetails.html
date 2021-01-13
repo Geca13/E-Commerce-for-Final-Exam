@@ -14,28 +14,120 @@
 
 <body>
 
-<nav class="navbar navbar-dark bg-dark">
-    <a class="navbar-brand" ><span sec:authentication="principal.username">User</span></a> 
-  <a class="navbar-brand" ><span sec:authentication="principal.authorities">User</span></a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-    <div class="navbar-nav">
-    <a class="nav-item nav-link" 
-         th:href="@{/profile}"
-                    sec:authentication="principal.username"
-    > Welcome <span >User</span></a>
+<nav class="navbar navbar-expand-lg navbar-light bg-warning">
+        <a class="navbar-brand" href="#">DZIKLE'S EXPRESS</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto topnav">
+            
+            <li class="nav-item dropdown ">
+            <div sec:authorize="isAuthenticated()">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Me
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="navbar-brand" ><span sec:authentication="principal.authorities">User</span></a>
+                        <div class="dropdown-divider"></div>
+                        <a class="nav-item nav-link"  th:href="@{/profile}" sec:authentication="principal.username"> Welcome <span >User</span></a>
+                        <div class="dropdown-divider"></div>
+                        <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-item nav-link" >Logout</a>
+                    </div>
+                    </div>
+                </li>
+                 
+                <li class="nav-item ">
+                    <a class="nav-link" href="#" th:href="@{/}">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a th:href="@{/products}" class="nav-item nav-link" >Products</a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/profile/cart}" class="nav-item nav-link" > My Shopping Cart</a>
+                </li>
+                
+                <li class="nav-item">
+                <div sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a th:href="@{/administration}" class="nav-item nav-link" > Administration</a>
+               </div>
+                </li>
+                <li class="nav-item">
+                <div sec:authorize="hasRole('ROLE_ANONYMOUS')">
+                    <a class="nav-link btn btn-primary text-white" type="button" href="#" data-toggle="modal" data-target="#myModal">Sign In/Register</a>                  
+               </div>
+                </li>
+                
+               </ul>
+        </div>
+         <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Customer Sign In</h4>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                   <form th:action="@{/login}" method="post">
     
-   
-      <a th:href="@{/profile/cart}" class="nav-item nav-link" > My Shopping Cart</a>
-      <a th:href="@{/products}" class="nav-item nav-link" >Products</a>
-      <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-item nav-link" >Logout</a>
-      
+    <div th:if="${param.error}">
+      <div class="alert alert-danger">Invalid username or
+       password.</div>
+     </div>
+     
+     <div th:if="${param.logout}">
+      <div class="alert alert-info">You have been logged out.</div>
+     </div>
+    
+    
+    
+    <div class="form-group">
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" class="form-control"
+       autofocus="autofocus" placeholder="Username" />
+     </div>
+     
+     <div class="form-group">
+      <label for="password">Password</label> 
+      <input type="password" id="password" name="password" class="form-control"
+       placeholder="Password" />
+     </div>
+     
+      <div class="form-group">
+      <div class="row">
+       <div class="col-sm-6 col-sm-offset-3">
+        <input type="submit" name="login-submit" id="login-submit"
+         class="form-control btn btn-primary" value="Log In" />
+       </div>
+      </div>
+     </div>
+     
+     </form>
+                </div>
+                <div class="form-group">
+      <span>New user? <a href="/" th:href="@{/signUpForm}">Register
+        here</a></span>
+     </div>
+     
+     <div class="form-group">
+     <p> 
+     <a th:href="@{/forgotPassword}">Did you forget your password??? CLICK MEEE :-)</a>
+     </p>
+     
+     </div>
+     
+     
+
+                
+            </div>
+        </div>
     </div>
-  </div>
-  
-</nav>
+ </nav>
 
 <div class="container">
   
@@ -75,6 +167,10 @@
       <tr>
         <th>Origin</th>
         <td th:text="*{country.countryName}"></td>
+      </tr>
+      <tr>
+        <th>Available Quantity</th>
+        <td th:text="*{availableQty}"></td>
       </tr>
       
     </table>
@@ -165,6 +261,20 @@
     
   
 </div>
+<div class="foot">
+   <div class="container">
+     <div class="row">
+       <div class="col-sm">
+         </div>
+           <div class="col-sm">
+             <h3>Gzikle's Shop powered by Marjan Geca Karafiloski . All right reserved 2020/2021</h3>
+           </div>
+          <div class="col-sm">
+         </div>
+        </div>
+      </div>
+      <br>
+    </div>
 
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
