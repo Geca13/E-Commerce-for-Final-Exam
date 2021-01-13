@@ -14,7 +14,6 @@ import com.example.aaa.shoppingCart.entity.CartProducts;
 import com.example.aaa.shoppingCart.entity.ShoppingCart;
 import com.example.aaa.shoppingCart.repository.CartProductsRepository;
 import com.example.aaa.shoppingCart.repository.ShoppingCartRepository;
-import com.example.aaa.shoppingCart.service.ShoppingCartService;
 import com.example.aaa.users.entity.Address;
 import com.example.aaa.users.entity.Users;
 import com.example.aaa.users.repository.AddressRepository;
@@ -24,8 +23,7 @@ import com.example.aaa.users.service.UsersDetails;
 @Controller
 public class ShoppingCartController {
 	
-	@Autowired
-	ShoppingCartService shoppingCartService;
+	
 	@Autowired
 	ProductRepository productRepository;
 	@Autowired
@@ -169,6 +167,7 @@ public class ShoppingCartController {
         cartPrRepository.save(product);
         product.setItemTotal(product.getItemTotal()-product.getProduct().getProductPrice());
         cartPrRepository.save(product);
+        
         
         cart.setTotal(cart.getTotal() - product.getProduct().getProductPrice());
       
