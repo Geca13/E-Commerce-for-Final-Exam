@@ -1,22 +1,16 @@
 package com.example.aaa.shoppingCart.entity;
 
-
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import com.example.aaa.bank.entity.CreditCard;
 import com.example.aaa.users.entity.Address;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,14 +35,7 @@ public class ShoppingCart {
 	private Double total;
 	
 	@ManyToOne
+	@JoinColumn(referencedColumnName = "id")
 	private Address address; 
 	
-	
-	
-	
-	
-
-	
-	
-
 }
