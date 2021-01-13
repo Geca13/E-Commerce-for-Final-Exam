@@ -54,8 +54,5 @@ public class Order {
 	private Double subtotal;
 	
 	private Double total;
-	
-	
-	
-	
+		
 }
