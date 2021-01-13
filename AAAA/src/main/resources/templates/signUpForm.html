@@ -13,20 +13,26 @@
     </style>
 </head>
 <body>
-<nav class="navbar navbar-dark bg-dark">
-  <a class="navbar-brand" >Customer</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-    <div class="navbar-nav">
-      <a th:href="@{/login}" class="nav-item nav-link" >Login</a>
-      <a th:href="@{/signUpAdmin}" class="nav-item nav-link" >Register</a>
-      <a th:href="@{/product}" class="nav-item nav-link" >Products</a>
-      
-    </div>
-  </div>
-</nav>
+<nav class="navbar navbar-expand-lg navbar-light bg-warning">
+        <a class="navbar-brand" href="#">DZIKLE'S EXPRESS</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto topnav">
+            
+                <li class="nav-item ">
+                    <a class="nav-link" href="#" th:href="@{/}">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/products}" class="nav-item nav-link" >Products</a>
+                </li>
+                
+                
+               </ul>
+        </div>
+ </nav>
 
  <br>
  <br>
@@ -84,11 +90,7 @@
       <input type="text" th:field="*{age}" required autofocus="autofocus" class="form-control" id="inputAge" placeholder="Age">
     </div>
   </div>
-
-  
-   
-   
-   <div class="form-group">
+ <div class="form-group">
       <button type="submit" class="btn btn-success">Register</button>
       <span>Already registered? <a href="/" th:href="@{/login}">Login
         here</a></span>
@@ -96,8 +98,6 @@
    <br>
  
   </form>
- 
- 
  </div>
  
  </div>
