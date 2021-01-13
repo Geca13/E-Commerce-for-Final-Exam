@@ -1,30 +1,20 @@
 package com.example.aaa.users.service;
 
 import java.util.ArrayList;
-
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-
-
 import com.example.aaa.users.entity.Role;
 import com.example.aaa.users.entity.Users;
 
 
 public class UsersDetails implements UserDetails{
 
-	
-	
-	
 	private Users users;
 	
-
-	public UsersDetails(Users users) {
+    public UsersDetails(Users users) {
 		super();
 		this.users = users;
 	}
@@ -66,11 +56,6 @@ public class UsersDetails implements UserDetails{
 	}
 
 	
-	
-        
-	
-	
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Set<Role> roles = users.getRoles();
