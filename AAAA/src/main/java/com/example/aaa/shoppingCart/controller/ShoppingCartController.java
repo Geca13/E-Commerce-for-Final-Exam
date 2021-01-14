@@ -41,6 +41,10 @@ public class ShoppingCartController {
 		String userEmail = userD.getUsername();
         Users user = userRepository.findByEmail(userEmail);
 	    ShoppingCart cart = user.getCart();
+		if(user.getCart().getProducts().isEmpty()) {
+	    	  
+	    	   return "redirect:/products?isEmpty";
+	      }
 	    Integer totalQty = 0;
         List<CartProducts> products = cart.getProducts();
            for (CartProducts cartProducts : products) {
