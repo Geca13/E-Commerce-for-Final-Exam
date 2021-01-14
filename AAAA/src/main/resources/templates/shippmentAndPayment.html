@@ -58,42 +58,38 @@
      <div class="alert alert-info">[[${messageAddress}]]</div>
     </div>
 
-  <h1>Shipping options</h1>
+  <h1>Shipping </h1>
 
  <form action="#" th:action="@{/confirmAndPay}" th:object="${cart}"class="form-horizontal" method="post">
       
-    <div class="form-group has-feedback">
-      <div class="form-group">
+     <fieldset>
+   
+        <legend>Select one of your previous addresses or</legend>
+        <a th:href="@{/profile/newAddress}" class="nav-item nav-link" >Add new Address...</a>
+       
+        <ul>
+            <li th:each="adr : ${listaddress}">
+                <input type="radio" th:field="*{address.id}" th:value="${adr.id}" />
+                <label th:for="${adr.id}" th:text="${adr.streetName + ' ' + adr.streetNumber + ' ' + adr.city + ' ' + adr.zipCode }"></label>
+            </li>
+        </ul>
+    </fieldset>
+   
+   
+   <fieldset>
+   
+        <legend>Select Shipping Option</legend>
         
-        <div class="col-sm-10">
-          <span th:text="${user?.firstName + ' ' + user?.lastName}" /></span>
-          </div>
-        </div>
-        </div>
-     
-    <a th:href="@{/profile/newAddress}" class="nav-item nav-link" >Add an Address...</a>
-    
-  <div class="form-group">
-    <label for="exampleFormControlSelect2">Select Shipping Address</label>
-    <select class="form-control" th:field="*{address.id}"  id="exampleFormControlSelect2" required>
-    
-      <option th:each="adr : ${listaddress}"
-      
-      th:value="${adr.id}"
-            th:text="${adr.streetName + ' ' + adr.streetNumber + ' ' + adr.city + ' ' + adr.zipCode }"/>
-       </select>
-   </div>
+        <ul>
+            <li th:each="adr : ${options}">
+                <input type="radio" th:field="*{option.id}" th:value="${adr.id}" />
+                <label th:for="${adr.id}" th:text="${adr.transporter + ' ' + adr.days + ' ' + adr.price }"></label>
+            </li>
+        </ul>
+    </fieldset>
+   
    <br/><br/>
-   <div class="form-group">
-    <label for="exampleFormControlSelect2">Select Shipping Option</label>
-    <select class="form-control" th:field="*{option}"  id="exampleFormControlSelect2"required>
-    
-      <option th:each="adr : ${options}"
-      
-      th:value="${adr.id}"
-            th:text="${adr.transporter + ' ' + adr.days + ' ' + adr.price }"/>
-       </select>
-   </div>
+   
   <table class="table table-striped"  >
    <tr>
         <th>TOTAL</th>
