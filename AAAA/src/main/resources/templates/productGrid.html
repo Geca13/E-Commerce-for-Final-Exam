@@ -131,6 +131,10 @@
 <div th:if="${param.productAdded}">
      <div class="alert alert-success">Product added in your Cart!!! </div>
     </div>
+  
+  <div th:if="${param.isEmpty}">
+     <div class="alert alert-info">Your cart is empty, please add products first !!! </div>
+    </div>
     
     <div th:if="${param.nothingReturnedC}">
      <div class="alert alert-success">We are sorry , but we are out of products from the selected category, please check soon again... </div>
